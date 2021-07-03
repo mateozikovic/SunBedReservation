@@ -1,4 +1,4 @@
-package com.example.sunbedreservation;
+package com.application.sunbedreservation;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.sunbedreservation;
+package com.application.sunbedreservation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
