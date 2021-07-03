@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SunBedReservation">
-        <activity android:name="com.application.sunbedreservation.MainActivity">
+        <activity android:name="com.application.sunbedreservation.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

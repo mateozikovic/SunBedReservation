@@ -1,10 +1,13 @@
 package com.application.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import com.application.database.models.UserModel;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -32,5 +35,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    public boolean addOne (UserModel userModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+
+        // @TODO solve problem with static method
+        // cv.put(COLUMN_FIRST_NAME, UserModel.getFirstName());
+
+    return true;
     }
 }
