@@ -42,9 +42,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
 
-        // @TODO solve problem with static method
-        // cv.put(COLUMN_FIRST_NAME, UserModel.getFirstName());
 
-    return true;
+         cv.put(COLUMN_FIRST_NAME, userModel.getFirstName());
+         cv.put(COLUMN_LAST_NAME, userModel.getLastName());
+         cv.put(COLUMN_E_MAIL, userModel.getEMail());
+         cv.put(COLUMN_ADDRESS, userModel.getAddress());
+         cv.put(COLUMN_CITY, userModel.getCity());
+         cv.put(COLUMN_COUNRTY, userModel.getCountry());
+         cv.put(COLUMN_POSTAL_CODE, userModel.getPostalCode());
+
+        long insert = db.insert(USER_TABLE, null, cv);
+        if(insert == -1) return false;
+        else return true;
     }
 }

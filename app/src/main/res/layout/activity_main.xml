@@ -26,13 +26,27 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
+        android:id="@+id/login_btn"
         android:layout_width="250px"
         android:layout_height="100px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_textbox"
-        app:layout_constraintVertical_bias="0.129" />
+        app:layout_constraintVertical_bias="0.129"
+        android:text="log in"
+        />
+
+    <Button
+        android:id="@+id/register_btn"
+        android:layout_width="250px"
+        android:layout_height="100px"
+        android:text="register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_btn"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
