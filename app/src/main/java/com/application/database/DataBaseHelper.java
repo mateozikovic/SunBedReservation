@@ -47,7 +47,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
          cv.put(COLUMN_FIRST_NAME, userModel.getFirstName());
          cv.put(COLUMN_LAST_NAME, userModel.getLastName());
          cv.put(COLUMN_E_MAIL, userModel.getEMail());
-         // todo create password column in usermodel
+         cv.put(COLUMN_PASSWORD, userModel.getPassword());
          cv.put(COLUMN_ADDRESS, userModel.getAddress());
          cv.put(COLUMN_CITY, userModel.getCity());
          cv.put(COLUMN_COUNRTY, userModel.getCountry());
