@@ -41,6 +41,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/last_name_textbox"
         app:layout_constraintVertical_bias="0.036" />
+    <EditText
+        android:id="@+id/password_reg_textbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_reg_textbox"
+        app:layout_constraintVertical_bias="0.036" />
+
 
     <EditText
         android:id="@+id/city_textbox"
@@ -51,8 +63,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email_reg_textbox"
-        app:layout_constraintVertical_bias="0.046" />
+        app:layout_constraintTop_toBottomOf="@id/password_reg_textbox"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/address_textbox"
@@ -82,6 +94,7 @@
         android:id="@+id/postal_code_textbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:hint="Enter your postal code:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

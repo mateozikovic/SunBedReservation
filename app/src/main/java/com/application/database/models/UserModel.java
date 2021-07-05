@@ -5,17 +5,19 @@ public class UserModel {
     private String firstName;
     private String lastName;
     private String eMail;
+    private String password;
     private String city;
     private String address;
     private String country;
     private int postalCode;
 
     // Constructor
-    public UserModel(int id, String firstName, String lastName, String eMail, String city, String address, String country, int postalCode) {
+    public UserModel(int id, String firstName, String lastName, String eMail, String password, String city, String address, String country, int postalCode) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.eMail = eMail;
+        this.password = password;
         this.city = city;
         this.address = address;
         this.country = country;
@@ -26,6 +28,8 @@ public class UserModel {
     public UserModel(int id) {
         this.id = id;
     }
+
+    // getters and setters
 
     public int getId() {
         return id;
@@ -57,6 +61,14 @@ public class UserModel {
 
     public void setEMail(String eMail) {
         this.eMail = eMail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCity() {
@@ -98,6 +110,7 @@ public class UserModel {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", eMail='" + eMail + '\'' +
+                ", password='" + password + '\'' +
                 ", city='" + city + '\'' +
                 ", address='" + address + '\'' +
                 ", country='" + country + '\'' +
