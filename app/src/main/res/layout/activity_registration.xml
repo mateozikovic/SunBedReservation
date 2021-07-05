@@ -8,67 +8,99 @@
 
     <EditText
         android:id="@+id/first_name_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your first name:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.221" />
+
     <EditText
         android:id="@+id/last_name_textbox"
-        android:hint="Enter your last name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your last name:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/first_name_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/first_name_textbox"
+        app:layout_constraintVertical_bias="0.023" />
+
     <EditText
         android:id="@+id/email_reg_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your e-mail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/last_name_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/last_name_textbox"
+        app:layout_constraintVertical_bias="0.036" />
+
     <EditText
         android:id="@+id/city_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your city:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email_reg_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/email_reg_textbox"
+        app:layout_constraintVertical_bias="0.046" />
+
     <EditText
         android:id="@+id/address_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your address:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/city_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/city_textbox"
+        app:layout_constraintVertical_bias="0.0" />
+
     <EditText
         android:id="@+id/country_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your country:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/address_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/address_textbox"
+        app:layout_constraintVertical_bias="0.0" />
+
     <EditText
         android:id="@+id/postal_code_textbox"
-        android:hint="Enter your first name:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter your postal code:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/country_textbox" />
+        app:layout_constraintTop_toBottomOf="@id/country_textbox"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/register_form_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postal_code_textbox"
+        app:layout_constraintVertical_bias="0.116" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
