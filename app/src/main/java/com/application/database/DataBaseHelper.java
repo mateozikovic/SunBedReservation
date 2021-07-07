@@ -11,6 +11,7 @@ import com.application.database.models.UserModel;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    // UserModel data constants
     public static final String USER_TABLE = "USER_TABLE";
     public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
     public static final String COLUMN_LAST_NAME = "LAST_NAME";
@@ -21,16 +22,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_COUNRTY = "COUNRTY";
     public static final String COLUMN_POSTAL_CODE = "POSTAL_CODE";
 
+    // BeachModel data constants
+
     public DataBaseHelper(@Nullable Context context) {
         super(context, "AppDatabase.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + USER_TABLE +
-                " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, " + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_ADDRESS + " TEXT, " + COLUMN_CITY + " TEXT, " + COLUMN_COUNRTY + " TEXT, " + COLUMN_POSTAL_CODE + " INTEGER)";
+        String createUserTableStatement = "CREATE TABLE " + USER_TABLE +
+                " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, "
+                + COLUMN_LAST_NAME + " TEXT, "
+                + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, "
+                + COLUMN_PASSWORD + " TEXT, "
+                + COLUMN_ADDRESS + " TEXT, "
+                + COLUMN_CITY + " TEXT, "
+                + COLUMN_COUNRTY + " TEXT, "
+                + COLUMN_POSTAL_CODE + " INTEGER)";
 
-        db.execSQL(createTableStatement);
+        db.execSQL(createUserTableStatement);
+
+        String createBeachTableStatement = "CREATE TABLE BEACH_TABLE(ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, LOCATION TEXT, INFO TEXT)";
     }
 
     @Override

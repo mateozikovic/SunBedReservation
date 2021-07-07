@@ -1,7 +1,7 @@
 package com.application.database.models;
 
 public class UserModel {
-    private int id;
+    private int userId;
     private String firstName;
     private String lastName;
     private String eMail;
@@ -13,7 +13,7 @@ public class UserModel {
 
     // Constructor
     public UserModel(int id, String firstName, String lastName, String eMail, String password, String city, String address, String country, int postalCode) {
-        this.id = id;
+        this.userId = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.eMail = eMail;
@@ -26,17 +26,17 @@ public class UserModel {
 
     // Empty constructor
     public UserModel(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
     // getters and setters
 
     public int getId() {
-        return id;
+        return userId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
     public String getFirstName() {
@@ -106,7 +106,7 @@ public class UserModel {
     @Override
     public String toString() {
         return "UserModel{" +
-                "id=" + id +
+                "id=" + userId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", eMail='" + eMail + '\'' +
