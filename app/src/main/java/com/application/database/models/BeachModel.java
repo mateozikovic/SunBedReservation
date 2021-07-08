@@ -2,17 +2,15 @@ package com.application.database.models;
 
 public class BeachModel {
     private int beachId;
-    private String name;
-    private String location;
-    private String info;
-    private String imagePath;
+    private String beachName;
+    private String beachLocation;
+    private String beachInfo;
 
     public BeachModel(int beachId, String name, String location, String info, String imagePath) {
         this.beachId = beachId;
-        this.name = name;
-        this.location = location;
-        this.info = info;
-        this.imagePath = imagePath;
+        this.beachName = name;
+        this.beachLocation = location;
+        this.beachInfo = info;
     }
 
     public int getBeachId() {
@@ -24,45 +22,38 @@ public class BeachModel {
     }
 
     public String getName() {
-        return name;
+        return beachName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.beachName = name;
     }
 
     public String getLocation() {
-        return location;
+        return beachLocation;
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        this.beachLocation = location;
     }
 
-    public String getInfo() {
-        return info;
+    public String getBeachInfo() {
+        return beachInfo;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setBeachInfo(String beachInfo) {
+        this.beachInfo = beachInfo;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
 
     @Override
     public String toString() {
         return "BeachModel{" +
                 "beachId=" + beachId +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", info='" + info + '\'' +
-                ", imagePath='" + imagePath + '\'' +
+                ", name='" + beachName + '\'' +
+                ", location='" + beachLocation + '\'' +
+                ", info='" + beachInfo + '\'' +
                 '}';
     }
 }
