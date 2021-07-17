@@ -13,6 +13,9 @@ public class BeachModel {
         this.beachInfo = info;
     }
 
+    public BeachModel() {
+    }
+
     public int getBeachId() {
         return beachId;
     }
