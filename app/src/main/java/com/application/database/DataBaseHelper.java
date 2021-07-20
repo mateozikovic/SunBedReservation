@@ -12,6 +12,7 @@ import com.application.database.models.UserModel;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    // User Table Constants
     public static final String USER_TABLE = "USER_TABLE";
     public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
     public static final String COLUMN_LAST_NAME = "LAST_NAME";
@@ -19,8 +20,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PASSWORD = "PASSWORD";
     public static final String COLUMN_ADDRESS = "ADDRESS";
     public static final String COLUMN_CITY = "CITY";
-    public static final String COLUMN_COUNRTY = "COUNRTY";
+    public static final String COLUMN_COUNTRY = "COUNRTY";
     public static final String COLUMN_POSTAL_CODE = "POSTAL_CODE";
+
+    // Beach Table Constants
+    public static final String BEACH_TABLE = "BEACH_TABLE";
+    public static final String COLUMN_BEACH_NAME = "BEACH_NAME";
+    public static final String COLUMN_BEACH_LOCATION = "BEACH_LOCATION";
+    public static final String COLUMN_BEACH_INFO = "BEACH_INFO";
+
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "AppDatabase.db", null, 1);
@@ -28,10 +36,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        // CREATE USER TABLE
         String createTableStatement = "CREATE TABLE " + USER_TABLE +
-                " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, " + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_ADDRESS + " TEXT, " + COLUMN_CITY + " TEXT, " + COLUMN_COUNRTY + " TEXT, " + COLUMN_POSTAL_CODE + " INTEGER)";
+                " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, " + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_ADDRESS + " TEXT, " + COLUMN_CITY + " TEXT, " + COLUMN_COUNTRY + " TEXT, " + COLUMN_POSTAL_CODE + " INTEGER)";
 
         db.execSQL(createTableStatement);
+
+        // Create Beach table
+        String createBeachTableStatement = "CREATE TABLE " + BEACH_TABLE + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_NAME + " TEXT, " + COLUMN_BEACH_LOCATION + " TEXT, " + COLUMN_BEACH_INFO + " TEXT)";
     }
 
     @Override
@@ -39,11 +52,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    // Function for adding one user in user table
     public boolean addOne (UserModel userModel){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-
-
 
          cv.put(COLUMN_FIRST_NAME, userModel.getFirstName());
          cv.put(COLUMN_LAST_NAME, userModel.getLastName());
@@ -51,7 +63,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
          cv.put(COLUMN_PASSWORD, userModel.getPassword());
          cv.put(COLUMN_ADDRESS, userModel.getAddress());
          cv.put(COLUMN_CITY, userModel.getCity());
-         cv.put(COLUMN_COUNRTY, userModel.getCountry());
+         cv.put(COLUMN_COUNTRY, userModel.getCountry());
          cv.put(COLUMN_POSTAL_CODE, userModel.getPostalCode());
 
         long insert = db.insert(USER_TABLE, null, cv);
@@ -59,13 +71,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else return true;
     }
 
+    // Function for adding beaches into beach table
     public boolean addBeach(BeachModel beachModel){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        //todo finish the function
+        cv.put(COLUMN_FIRST_NAME, beachModel.getBeachName());
+        cv.put(COLUMN_BEACH_LOCATION, beachModel.getBeachLocation());
+        cv.put(COLUMN_BEACH_INFO, beachModel.getBeachInfo());
 
-        return true;
+        long insert = db.insert(BEACH_TABLE, null, cv);
+        if(insert == -1) return false;
+        else return true;
+
     }
 
 }

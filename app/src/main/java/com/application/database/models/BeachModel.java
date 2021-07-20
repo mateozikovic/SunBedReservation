@@ -24,20 +24,20 @@ public class BeachModel {
         this.beachId = beachId;
     }
 
-    public String getName() {
+    public String getBeachName() {
         return beachName;
     }
 
-    public void setName(String name) {
-        this.beachName = name;
+    public void setBeachName(String beachName) {
+        this.beachName = beachName;
     }
 
-    public String getLocation() {
+    public String getBeachLocation() {
         return beachLocation;
     }
 
-    public void setLocation(String location) {
-        this.beachLocation = location;
+    public void setBeachLocation(String beachLocation) {
+        this.beachLocation = beachLocation;
     }
 
     public String getBeachInfo() {
@@ -47,8 +47,6 @@ public class BeachModel {
     public void setBeachInfo(String beachInfo) {
         this.beachInfo = beachInfo;
     }
-
-
 
     @Override
     public String toString() {
