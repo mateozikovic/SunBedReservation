@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.application.database.models.BeachModel;
+import com.application.database.models.NewsModel;
 import com.application.database.models.SunbedModel;
 import com.application.database.models.UserModel;
 
@@ -16,7 +17,7 @@ import java.sql.SQLInput;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-    // User Table Constants
+    // User Table constants
     public static final String USER_TABLE = "USER_TABLE";
     public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
     public static final String COLUMN_LAST_NAME = "LAST_NAME";
@@ -27,7 +28,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_COUNTRY = "COUNRTY";
     public static final String COLUMN_POSTAL_CODE = "POSTAL_CODE";
 
-    // Beach Table Constants
+    // Beach Table constants
     public static final String BEACH_TABLE = "BEACH_TABLE";
     public static final String COLUMN_BEACH_NAME = "BEACH_NAME";
     public static final String COLUMN_BEACH_LOCATION = "BEACH_LOCATION";
@@ -42,6 +43,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DAILY_PRICE_NOSEASON = "DAILY_PRICE_NOSEASON";
     public static final String COLUMN_RESERVED = "RESERVED";
 
+    // News Table constants
+    public static final String COLUMN_NEWS_TITLE = "NEWS_TITLE";
+    public static final String COLUMN_NEWS_TEXT = "NEWS_TEXT";
+    public static final String COLUMN_NEWS_DATE = "NEWS_DATE";
+    public static final String COLUMN_NEWS_IMAGE = "NEWS_IMAGE";
+    public static final String NEWS_TABLE = "NEWS_TABLE";
+
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "AppDatabase.db", null, 1);
@@ -50,7 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // CREATE USER TABLE
+        // Create User Table
         String createTableStatement = "CREATE TABLE " + USER_TABLE +
                 " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, " + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_ADDRESS + " TEXT, " + COLUMN_CITY + " TEXT, " + COLUMN_COUNTRY + " TEXT, " + COLUMN_POSTAL_CODE + " INTEGER)";
 
@@ -61,7 +69,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(createBeachTableStatement);
 
-        String createSunbedTableStatement = "CREATE TABLE " + SUNBED_TABLE + "(SUNBED_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_ID + " INTEGER, " + COLUMN_SECTION + " TEXT, " + COLUMN_NUMBER + " INT, " + COLUMN_DAILY_PRICE_SEASON + " REAL, " + COLUMN_DAILY_PRICE_NOSEASON + " REAL, " + COLUMN_RESERVED + " INT, FOREIGN KEY(BEACH_ID) REFERENCES BEACH_TABLE(BEACH_ID)";
+        // Create Sunbed Table
+
+        // todo fix the problem with quotation marks
+//        String createSunbedTableStatement = "CREATE TABLE " + SUNBED_TABLE + "(SUNBED_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_ID + " INTEGER, " + COLUMN_SECTION + " TEXT, " + COLUMN_NUMBER + " INT, " + COLUMN_DAILY_PRICE_SEASON + " REAL, " + COLUMN_DAILY_PRICE_NOSEASON + " REAL, " + COLUMN_RESERVED + " INT, FOREIGN KEY(BEACH_ID) REFERENCES BEACH_TABLE(BEACH_ID)";
+//        db.execSQL(createSunbedTableStatement);
+
+        // Create News Table
+        String createNewsTableStatement = "CREATE TABLE " + NEWS_TABLE + "(NEWS_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NEWS_TITLE + " TEXT, " + COLUMN_NEWS_TEXT + " TEXT, " + COLUMN_NEWS_DATE + " TEXT, " + COLUMN_NEWS_IMAGE + " TEXT)";
+        db.execSQL(createNewsTableStatement);
     }
 
     @Override
@@ -114,6 +130,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DAILY_PRICE_NOSEASON, sunbedModel.getGetDailyNonSeason());
         cv.put(COLUMN_RESERVED, sunbedModel.isReserved());
 
+        long insert = db.insert(NEWS_TABLE, null, cv);
+        if(insert == -1) return false;
+        return true;
+    }
+
+    public boolean addNews(NewsModel newsModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_NEWS_TITLE, newsModel.getNewsTitle());
+        cv.put(COLUMN_NEWS_TEXT, newsModel.getNewsText());
+        cv.put(COLUMN_NEWS_DATE, newsModel.getDate());
+        cv.put(COLUMN_NEWS_IMAGE, newsModel.getImage());
+
+        long insert = db.insert(NEWS_TABLE, null, cv);
+        if(insert == -1) return false;
         return true;
     }
 
