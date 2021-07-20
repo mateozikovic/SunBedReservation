@@ -77,4 +77,17 @@ public class OrderModel {
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
+
+    @Override
+    public String toString() {
+        return "OrderModel{" +
+                "orderID=" + orderID +
+                ", userID=" + userID +
+                ", sunbedID=" + sunbedID +
+                ", orderDate='" + orderDate + '\'' +
+                ", reservationDateStart='" + reservationDateStart + '\'' +
+                ", reservationDateEnd='" + reservationDateEnd + '\'' +
+                ", totalCost=" + totalCost +
+                '}';
+    }
 }

@@ -79,6 +79,19 @@ public class SunbedModel extends BeachModel{
     public void setReserved(boolean reserved) {
         this.reserved = reserved;
     }
+
+    @Override
+    public String toString() {
+        return "SunbedModel{" +
+                "sunbedID=" + sunbedID +
+                ", beachID=" + beachID +
+                ", sunbedSection='" + sunbedSection + '\'' +
+                ", sunbedNumber=" + sunbedNumber +
+                ", dailyPriceSeason=" + dailyPriceSeason +
+                ", getDailyNonSeason=" + getDailyNonSeason +
+                ", reserved=" + reserved +
+                '}';
+    }
 }
 
 
