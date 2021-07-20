@@ -29,6 +29,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_BEACH_LOCATION = "BEACH_LOCATION";
     public static final String COLUMN_BEACH_INFO = "BEACH_INFO";
 
+    // Sunbed Table constants
+    public static final String SUNBED_TABLE = "SUNBED_TABLE";
+    public static final String COLUMN_BEACH_ID = "BEACH_ID";
+    public static final String COLUMN_SECTION = "SECTION";
+    public static final String COLUMN_NUMBER = "NUMBER";
+    public static final String COLUMN_DAILY_PRICE_SEASON = "DAILY_PRICE_SEASON";
+    public static final String COLUMN_DAILY_PRICE_NOSEASON = "DAILY_PRICE_NOSEASON";
+    public static final String COLUMN_RESERVED = "RESERVED";
+
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "AppDatabase.db", null, 1);
@@ -44,7 +53,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
 
         // Create Beach table
-        String createBeachTableStatement = "CREATE TABLE " + BEACH_TABLE + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_NAME + " TEXT, " + COLUMN_BEACH_LOCATION + " TEXT, " + COLUMN_BEACH_INFO + " TEXT)";
+        String createBeachTableStatement = "CREATE TABLE " + BEACH_TABLE + "(" + COLUMN_BEACH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_NAME + " TEXT, " + COLUMN_BEACH_LOCATION + " TEXT, " + COLUMN_BEACH_INFO + " TEXT)";
+
+        db.execSQL(createBeachTableStatement);
+
+        String createSunbedTableStatement = "CREATE TABLE " + SUNBED_TABLE + "(SUNBED_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_ID + " INTEGER, " + COLUMN_SECTION + " TEXT, " + COLUMN_NUMBER + " INT, " + COLUMN_DAILY_PRICE_SEASON + " REAL, " + COLUMN_DAILY_PRICE_NOSEASON + " REAL, " + COLUMN_RESERVED + " INT, FOREIGN KEY(BEACH_ID) REFERENCES BEACH_TABLE(BEACH_ID)";
     }
 
     @Override
