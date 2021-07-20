@@ -3,12 +3,16 @@ package com.application.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
 import com.application.database.models.BeachModel;
+import com.application.database.models.SunbedModel;
 import com.application.database.models.UserModel;
+
+import java.sql.SQLInput;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -98,5 +102,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else return true;
 
     }
+
+    public boolean addSunbed(SunbedModel sunbedModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_BEACH_ID, sunbedModel.getBeachID());
+        cv.put(COLUMN_SECTION, sunbedModel.getSunbedSection());
+        cv.put(COLUMN_NUMBER, sunbedModel.getSunbedNumber());
+        cv.put(COLUMN_DAILY_PRICE_SEASON, sunbedModel.getDailyPriceSeason());
+        cv.put(COLUMN_DAILY_PRICE_NOSEASON, sunbedModel.getGetDailyNonSeason());
+        cv.put(COLUMN_RESERVED, sunbedModel.isReserved());
+
+        return true;
+    }
+
 
 }
