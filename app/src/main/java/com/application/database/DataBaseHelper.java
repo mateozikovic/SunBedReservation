@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.application.database.models.BeachModel;
 import com.application.database.models.NewsModel;
+import com.application.database.models.OrderModel;
 import com.application.database.models.SunbedModel;
 import com.application.database.models.UserModel;
 
@@ -49,6 +50,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NEWS_DATE = "NEWS_DATE";
     public static final String COLUMN_NEWS_IMAGE = "NEWS_IMAGE";
     public static final String NEWS_TABLE = "NEWS_TABLE";
+    public static final String ORDER_TABLE = "ORDER_TABLE";
+    public static final String COLUMN_USER_ID = "USER_ID";
+    public static final String COLUMN_SUNBED_ID = "SUNBED_ID";
+    public static final String COLUMN_ORDER_DATE = "ORDER_DATE";
+    public static final String COLUMN_RESERVATION_DATE_START = "RESERVATION_DATE_START";
+    public static final String COLUMN_RESERVATION_DATE_END = "RESERVATION_DATE_END";
+    public static final String COLUMN_TOTAL_COST = "TOTAL_COST";
 
 
     public DataBaseHelper(@Nullable Context context) {
@@ -61,23 +69,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // Create User Table
         String createTableStatement = "CREATE TABLE " + USER_TABLE +
                 " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, " + COLUMN_E_MAIL +  " TEXT NOT NULL UNIQUE, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_ADDRESS + " TEXT, " + COLUMN_CITY + " TEXT, " + COLUMN_COUNTRY + " TEXT, " + COLUMN_POSTAL_CODE + " INTEGER)";
-
         db.execSQL(createTableStatement);
 
         // Create Beach table
         String createBeachTableStatement = "CREATE TABLE " + BEACH_TABLE + "(" + COLUMN_BEACH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_NAME + " TEXT, " + COLUMN_BEACH_LOCATION + " TEXT, " + COLUMN_BEACH_INFO + " TEXT)";
-
         db.execSQL(createBeachTableStatement);
 
-        // Create Sunbed Table
+        // Create Sunbed table
+        String createSunbedTableStatement = "CREATE TABLE " + SUNBED_TABLE + "(" + COLUMN_SUNBED_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_ID + " INTEGER, " + COLUMN_SECTION + " TEXT, " + COLUMN_NUMBER + " INT, " + COLUMN_DAILY_PRICE_SEASON + " REAL, " + COLUMN_DAILY_PRICE_NOSEASON + " REAL, " + COLUMN_RESERVED + " INT, FOREIGN KEY(BEACH_ID) REFERENCES BEACH_TABLE(BEACH_ID))";
+        db.execSQL(createSunbedTableStatement);
 
-        // todo fix the problem with quotation marks
-//        String createSunbedTableStatement = "CREATE TABLE " + SUNBED_TABLE + "(SUNBED_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_BEACH_ID + " INTEGER, " + COLUMN_SECTION + " TEXT, " + COLUMN_NUMBER + " INT, " + COLUMN_DAILY_PRICE_SEASON + " REAL, " + COLUMN_DAILY_PRICE_NOSEASON + " REAL, " + COLUMN_RESERVED + " INT, FOREIGN KEY(BEACH_ID) REFERENCES BEACH_TABLE(BEACH_ID)";
-//        db.execSQL(createSunbedTableStatement);
-
-        // Create News Table
+        // Create News Ttble
         String createNewsTableStatement = "CREATE TABLE " + NEWS_TABLE + "(NEWS_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NEWS_TITLE + " TEXT, " + COLUMN_NEWS_TEXT + " TEXT, " + COLUMN_NEWS_DATE + " TEXT, " + COLUMN_NEWS_IMAGE + " TEXT)";
         db.execSQL(createNewsTableStatement);
+
+        // Create Order table
+        String createOrderTableStatement = "CREATE TABLE " + ORDER_TABLE + " (ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_USER_ID + " INTEGER, " + COLUMN_SUNBED_ID + " INTEGER, " + COLUMN_ORDER_DATE + " TEXT, " + COLUMN_RESERVATION_DATE_START + " TEXT, " + COLUMN_RESERVATION_DATE_END + " TEXT, " + COLUMN_TOTAL_COST + " REAL, FOREIGN KEY (USER_ID) REFERENCES USER_TABLE(USER_ID), FOREIGN KEY (SUNBED_ID) REFERENCES SUNBED_TABLE(SUNBED_ID))";
+        db.execSQL(createOrderTableStatement);
     }
 
     @Override
@@ -132,7 +140,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         long insert = db.insert(NEWS_TABLE, null, cv);
         if(insert == -1) return false;
-        return true;
+        else return true;
     }
 
     public boolean addNews(NewsModel newsModel){
@@ -146,8 +154,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         long insert = db.insert(NEWS_TABLE, null, cv);
         if(insert == -1) return false;
-        return true;
+        else return true;
     }
+
+    public boolean addOrder(OrderModel orderModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_USER_ID, orderModel.getUserID());
+        cv.put(COLUMN_SUNBED_ID, orderModel.getSunbedID());
+        cv.put(COLUMN_ORDER_DATE, orderModel.getOrderDate());
+        cv.put(COLUMN_RESERVATION_DATE_START, orderModel.getReservationDateStart());
+        cv.put(COLUMN_RESERVATION_DATE_END, orderModel.getReservationDateEnd());
+        cv.put(COLUMN_TOTAL_COST, orderModel.getTotalCost());
+
+        long insert = db.insert(ORDER_TABLE, null, cv);
+        if(insert == -1) return false;
+        else return true;
+    }
+
+
 
 
 }
