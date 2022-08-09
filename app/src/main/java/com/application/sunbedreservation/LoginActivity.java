@@ -7,29 +7,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-public class LoginActivity extends AppCompatActivity {
+import org.w3c.dom.Text;
 
-    //textbox and button references
-    Button login_btn, register_btn;
-    EditText email_textbox, password_textbox;
+/*
+ * Activity for logging in, with login button, registration button and forgot password Button.
+ * */
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private TextView registerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        login_btn = findViewById(R.id.login_btn);
-        register_btn = findViewById(R.id.register_btn);
+        registerTextView = (TextView) findViewById(R.id.registerTextView);
+        registerTextView.setOnClickListener(this);
+    }
 
-        register_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent RegistrationActivity = new Intent(getApplicationContext(), RegistrationActivity.class);
-                startActivity(RegistrationActivity);
-            }
-        });
-
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.registerTextView:
+                startActivity(new Intent(this, RegistrationActivity.class));
+        }
     }
 }

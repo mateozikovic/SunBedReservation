@@ -2,66 +2,98 @@ package com.application.sunbedreservation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.application.database.DataBaseHelper;
-import com.application.database.models.UserModel;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener{
 
-    EditText first_name, last_name, e_mail, password, city, address, country, postal_code;
-    Button register_form_btn;
+    private TextView registerButton, banner;
+    private EditText fullNameEditText, registerEmailEditText, editTextPhone, registerPasswordEditText;
+    private ProgressBar progressBar;
+
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        first_name = findViewById(R.id.first_name_textbox);
-        last_name = findViewById(R.id.last_name_textbox);
-        e_mail = findViewById(R.id.email_reg_textbox);
-        password = findViewById(R.id.password_reg_textbox);
-        city = findViewById(R.id.city_textbox);
-        address = findViewById(R.id.address_textbox);
-        country = findViewById(R.id.country_textbox);
-        postal_code = findViewById(R.id.postal_code_textbox);
+        mAuth = FirebaseAuth.getInstance();
 
-        register_form_btn = findViewById(R.id.register_form_btn);
+        banner = (TextView) findViewById(R.id.banner);
+        banner.setOnClickListener(this);
 
-        register_form_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        registerButton = (Button) findViewById(R.id.registerButton);
+        registerButton.setOnClickListener(this);
 
-                UserModel userModel;
+        fullNameEditText = (EditText) findViewById(R.id.fullNameEditText);
+        registerEmailEditText = (EditText) findViewById(R.id.registerEmailEditText);
+        editTextPhone = (EditText) findViewById(R.id.editTextPhone);
+        registerPasswordEditText = (EditText) findViewById(R.id.editTextPhone);
 
-                try {
-                            int pcode = Integer.parseInt(postal_code.getText().toString());
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
 
-                            userModel = new UserModel(-1, first_name.getText().toString(),
-                            last_name.getText().toString(),
-                            e_mail.getText().toString(),
-                            password.getText().toString(),
-                            city.getText().toString(),
-                            address.getText().toString(),
-                            country.getText().toString(),
-                            pcode);
-                }
-                catch (Exception e){
-                    Toast.makeText(RegistrationActivity.this, "Error creating user!", Toast.LENGTH_SHORT).show();
-                    userModel = new UserModel(-1, "error", "error", "error", "error", "error", "error", "error", 1 );
-                }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.banner:
+            startActivity(new Intent(this, LoginActivity.class));
+            break;
+            case R.id.registerButton:
+                registerUser();
+                break;
+        }
+    }
 
-                DataBaseHelper dataBaseHelper = new DataBaseHelper(RegistrationActivity.this);
+    private void registerUser() {
+        String email = registerEmailEditText.getText().toString().trim();
+        String password = registerPasswordEditText.getText().toString().trim();
+        String fullName = fullNameEditText.getText().toString().trim();
+        String phone = editTextPhone.getText().toString().trim();
 
-                boolean success = dataBaseHelper.addOne(userModel);
+        if(fullName.isEmpty()){
+            fullNameEditText.setError("Full name is required!");
+            fullNameEditText.requestFocus();
+            return;
+        }
 
-                Toast.makeText(RegistrationActivity.this, "Success" + success, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(email.isEmpty()){
+            registerEmailEditText.setError("E-mail is required!");
+            registerEmailEditText.requestFocus();
+            return;
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            registerEmailEditText.setError("Please provide a valid e-mail.");
+            registerEmailEditText.requestFocus();
+        }
+
+        if(password.isEmpty()){
+            registerPasswordEditText.setError("Password is required!");
+            registerPasswordEditText.requestFocus();
+        }
+
+        if(password.length() < 6 ){
+            registerPasswordEditText.setError("Min password length is 6!");
+            registerPasswordEditText.requestFocus();
+        }
+
+        if(phone.isEmpty()){
+            editTextPhone.setError("Phone number is required!");
+            editTextPhone.requestFocus();
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
 
     }
 }
