@@ -1,5 +1,9 @@
 package com.application.sunbedreservation;
 
+/*
+* User object
+* */
+
 public class User {
 
     public String fullName, email, phone;
