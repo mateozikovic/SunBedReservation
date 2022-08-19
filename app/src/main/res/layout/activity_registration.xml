@@ -68,7 +68,7 @@
             tools:layout_editor_absoluteY="276dp" />
 
         <EditText
-            android:id="@+id/registerPasswordEditTest"
+            android:id="@+id/registerPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

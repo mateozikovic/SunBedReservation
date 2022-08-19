@@ -51,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         fullNameEditText = (EditText) findViewById(R.id.fullNameEditText);
         registerEmailEditText = (EditText) findViewById(R.id.registerEmailEditText);
         editTextPhone = (EditText) findViewById(R.id.editTextPhone);
-        registerPasswordEditText = (EditText) findViewById(R.id.editTextPhone);
+        registerPasswordEditText = (EditText) findViewById(R.id.registerPasswordEditText);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
