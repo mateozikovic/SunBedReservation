@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
@@ -103,17 +104,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    //redirect to user profile
-                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    if (user.isEmailVerified()) {
+                        //Redirect to user profile
+                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                    } else {
+                        user.sendEmailVerification();
+                        Toast.makeText(LoginActivity.this, "Check your email to verify your account!", Toast.LENGTH_LONG).show();
+                    }
 
                 } else {
-                    // Toast.makeText(LoginActivity.this, "Failed to login... Please try again!", Toast.LENGTH_LONG).show();
-
-                    Toast.makeText(LoginActivity.this, "Error: "+ task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Failed to login... Please try again!", Toast.LENGTH_LONG).show();
+                    progressBarLogin.setVisibility(View.GONE);
+                    // Toast.makeText(LoginActivity.this, "Error: "+ task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-
-
         });
     }
 }
