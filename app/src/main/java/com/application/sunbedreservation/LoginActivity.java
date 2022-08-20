@@ -20,10 +20,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
-
-import java.util.regex.Pattern;
-
 /*
  * Activity for logging in, with login button, registration button and forgot password Button.
  * */
@@ -40,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         registerTextView = (TextView) findViewById(R.id.registerTextView);
         registerTextView.setOnClickListener(this);
@@ -114,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     if (user.isEmailVerified()) {
                         //Redirect to user profile
-                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     } else {
                         user.sendEmailVerification();
                         Toast.makeText(LoginActivity.this, "Check your email to verify your account!", Toast.LENGTH_LONG).show();
