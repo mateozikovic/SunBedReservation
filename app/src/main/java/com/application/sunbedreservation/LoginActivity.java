@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView registerTextView;
+    private TextView registerTextView, forgotPassword;
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
 
@@ -54,6 +54,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
 
         mAuth = FirebaseAuth.getInstance();
+
+        forgotPassword = (TextView) findViewById(R.id.resetPasswordTextView);
+        forgotPassword.setOnClickListener(this);
     }
 
 
@@ -62,9 +65,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.registerTextView:
                 startActivity(new Intent(this, RegistrationActivity.class));
-
+                break;
             case R.id.loginButton:
                 userLogin();
+                break;
+            case R.id.resetPasswordTextView:
+                startActivity(new Intent(LoginActivity.this, ForgotPassword.class));
         }
     }
 
