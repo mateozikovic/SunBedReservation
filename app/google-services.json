@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "420416608487",
+    "firebase_url": "https://sunbedreservation-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sunbedreservation",
+    "storage_bucket": "sunbedreservation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420416608487:android:12dd93e1d7a5fefd476a42",
+        "android_client_info": {
+          "package_name": "com.example.sunbedreservation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420416608487-q31jig0b5kp8ohbsfj6nmbqgqoqj1no1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqcO7G_yWopnK7cRwcinw8VSzRxhgtyAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420416608487-q31jig0b5kp8ohbsfj6nmbqgqoqj1no1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
