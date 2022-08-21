@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Home"
-        android:icon="@drawable/ic_baseline_home_24"
+    <item android:title="Find a beach"
+        android:icon="@drawable/ic_baseline_beach_access_24"
         android:id="@+id/home"
         />
+    <item android:title="Reservations"
+        android:icon="@drawable/ic_baseline_king_bed_24"
+        android:id="@+id/reservations"/>
+    <item android:title="News"
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:id="@+id/news"/>
     <item android:title="Profile"
         android:icon="@drawable/ic_baseline_person_24"
         android:id="@+id/profile"/>
-    <item android:title="Settings"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:id="@+id/settings"/>
 </menu>

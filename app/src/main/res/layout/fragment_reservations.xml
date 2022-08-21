@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CA1212"
-    tools:context=".SettingsFragment">
+    tools:context=".ReservationsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

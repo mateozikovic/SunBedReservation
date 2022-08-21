@@ -79,7 +79,7 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Something wrong happened!", Toast.LENGTH_LONG).show();
             }
         });
-        return view;
 
+        return view;
     }
 }
