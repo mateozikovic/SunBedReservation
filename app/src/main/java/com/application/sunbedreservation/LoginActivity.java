@@ -51,6 +51,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
+
+        // Check if the user is logged in already, and take him to MainActivity
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // user is signed in
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            // User is signed out
+            Log.d("TAG", "onAuthStateChanged:signed_out");
+        }
+
         forgotPassword = (TextView) findViewById(R.id.resetPasswordTextView);
         forgotPassword.setOnClickListener(this);
     }
