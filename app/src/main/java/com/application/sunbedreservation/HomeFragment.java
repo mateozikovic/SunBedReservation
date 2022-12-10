@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         LatLng istra = new LatLng(45.28857049078383, 13.889700401795668);
         CameraPosition cp = new CameraPosition.Builder().target(istra).zoom(9).build();
 
-      //  SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+       // SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
         // start a map with location on Istrian Peninsula
         FragmentManager fm = getChildFragmentManager();
@@ -95,5 +95,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new CustomInfoWindowForGoogleMap(getContext()));
     }
 }
