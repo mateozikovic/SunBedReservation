@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -96,5 +97,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new CustomInfoWindowForGoogleMap(getContext()));
+
+        String title = "This is title";
+        String subTitle = "This is subtitle";
+
+        MarkerOptions markerOpt = new MarkerOptions();
+        markerOpt.position(new LatLng(45.28857049078383, 13.889700401795668))
+                .title(title)
+                .snippet(subTitle)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_full_open_on_phone));
+
+        //Set Custom InfoWindow Adapter
+        CustomInfoWindowForGoogleMap adapter = new CustomInfoWindowForGoogleMap(getContext());
+        mMap.setInfoWindowAdapter(adapter);
+
+        mMap.addMarker(markerOpt).showInfoWindow();
     }
 }
