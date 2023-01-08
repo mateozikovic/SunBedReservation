@@ -101,6 +101,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         String title = "This is title";
         String subTitle = "This is subtitle";
 
+        //TODO add a list of beaches with their custom markers
+
         MarkerOptions markerOpt = new MarkerOptions();
         markerOpt.position(new LatLng(45.28857049078383, 13.889700401795668))
                 .title(title)

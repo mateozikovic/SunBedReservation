@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.application.sunbedreservation.databinding.ActivityMainBinding;
+import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-    }
+
+        StoreDataInFirebase fillDB = new StoreDataInFirebase();
+        fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
+                "44.84640377977642, 13.833914353971652", "20");
+}
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

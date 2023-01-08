@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
  * Activity for logging in, with login button, registration button and forgot password Button.
  * */
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextView registerTextView, forgotPassword;
     private EditText emailEditText, passwordEditText;
