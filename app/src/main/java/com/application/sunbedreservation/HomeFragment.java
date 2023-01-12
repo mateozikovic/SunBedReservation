@@ -1,12 +1,16 @@
 package com.application.sunbedreservation;
 
+import static android.content.ContentValues.TAG;
+
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -20,6 +24,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,8 +50,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         //initial camera position coordinates
         LatLng istra = new LatLng(45.28857049078383, 13.889700401795668);
         CameraPosition cp = new CameraPosition.Builder().target(istra).zoom(9).build();
-
-       // SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
         // start a map with location on Istrian Peninsula
         FragmentManager fm = getChildFragmentManager();
@@ -101,7 +108,39 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         String title = "This is title";
         String subTitle = "This is subtitle";
 
-        //TODO add a list of beaches with their custom markers
+    //TODO fetch beaches from DB and display them on the screen
+
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("Beaches");
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                /*if (snapshot.exists()){
+                    Beach beach = snapshot.getValue(Beach.class);
+                    Log.i("Print out", String.valueOf(snapshot.getChildren()));
+                }*/
+
+                for(DataSnapshot beachSnapshot: snapshot.getChildren()) {
+                    Log.i("printout", String.valueOf(beachSnapshot.getValue()));
+                    Beach beach = beachSnapshot.getValue(Beach.class);
+                    Log.i("test", String.valueOf(beach.locationLat));
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
+                            .title(beach.title)
+                            .snippet(beach.subTitle)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_full_open_on_phone));
+                    mMap.addMarker(marker);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        });
+
+
 
         MarkerOptions markerOpt = new MarkerOptions();
         markerOpt.position(new LatLng(45.28857049078383, 13.889700401795668))

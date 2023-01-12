@@ -5,17 +5,18 @@ package com.application.sunbedreservation;
  */
 
 public class Beach {
-    public String title, subTitle, picture, location, freeSunbeds;
+    public String title, subTitle, picture, locationLat, locationLng, freeSunbeds;
 
     public Beach(){
 
     }
 
-    public Beach(String title, String subTitle, String picture, String location, String freeSunbeds){
+    public Beach(String title, String subTitle, String picture, String locationLat, String locationLng, String freeSunbeds){
         this.title = title;
         this.subTitle = subTitle;
         this.picture = picture;
-        this.location = location;
+        this.locationLat = locationLat;
+        this.locationLng = locationLng;
         this.freeSunbeds = freeSunbeds;
     }
 }

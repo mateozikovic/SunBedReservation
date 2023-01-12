@@ -41,9 +41,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        StoreDataInFirebase fillDB = new StoreDataInFirebase();
+        /*toreDataInFirebase fillDB = new StoreDataInFirebase();
         fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
-                "44.84640377977642, 13.833914353971652", "20");
+                "44.84640377977642", "13.833914353971652", "20");
+        fillDB.writeNewBeach("Pical Beach", "Plaza u blizini hotela Parentino", "pic.jpg",
+                "45.23498102948223", "13.596537451227437", "15");
+        fillDB.writeNewBeach("Materada Beach", "Plaza u blizini hotela Materada", "pic.jpg",
+                "45.24926887641833", "13.591844956120799", "25");*/
+
 }
 
     private void replaceFragment(Fragment fragment) {
