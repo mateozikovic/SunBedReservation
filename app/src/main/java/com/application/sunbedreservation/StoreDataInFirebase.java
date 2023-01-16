@@ -5,7 +5,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class StoreDataInFirebase {
     public void writeNewBeach(String title, String subTitle, String picture, String locationLat, String locationLng, String freeSunbeds){
-        Beach beach = new Beach(title, subTitle, picture, locationLat, locationLng, freeSunbeds);
+        Beach beach = new Beach(title, subTitle, locationLat, locationLng, freeSunbeds);
 
         // save a beach to the database with a unique key
         DatabaseReference mDatabase;

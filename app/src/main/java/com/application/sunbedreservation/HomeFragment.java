@@ -2,6 +2,7 @@ package com.application.sunbedreservation;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
@@ -82,9 +86,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     // where we will add our locations latitude and longitude.
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                    // on below line we are adding marker to that position.
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-
                     // below line is to animate camera to that position.
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                 }
@@ -105,32 +106,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new CustomInfoWindowForGoogleMap(getContext()));
 
-        String title = "This is title";
-        String subTitle = "This is subtitle";
-
-    //TODO fetch beaches from DB and display them on the screen
-
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("Beaches");
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                /*if (snapshot.exists()){
-                    Beach beach = snapshot.getValue(Beach.class);
-                    Log.i("Print out", String.valueOf(snapshot.getChildren()));
-                }*/
 
+                // cycle through documents in beaches collection and display a beach on the map
                 for(DataSnapshot beachSnapshot: snapshot.getChildren()) {
                     Log.i("printout", String.valueOf(beachSnapshot.getValue()));
                     Beach beach = beachSnapshot.getValue(Beach.class);
                     Log.i("test", String.valueOf(beach.locationLat));
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
                             .title(beach.title)
                             .snippet(beach.subTitle)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_full_open_on_phone));
-                    mMap.addMarker(marker);
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pointer));
+                    
+                    Map<String,Object> customProperties = new HashMap<>();
+                    customProperties.put("customString", beach.freeSunbeds);
+
+                    Marker marker = mMap.addMarker(markerOptions);
+                    marker.setTag(customProperties);
                 }
             }
 
@@ -140,18 +139,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
-
-        MarkerOptions markerOpt = new MarkerOptions();
-        markerOpt.position(new LatLng(45.28857049078383, 13.889700401795668))
-                .title(title)
-                .snippet(subTitle)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_full_open_on_phone));
-
         //Set Custom InfoWindow Adapter
         CustomInfoWindowForGoogleMap adapter = new CustomInfoWindowForGoogleMap(getContext());
         mMap.setInfoWindowAdapter(adapter);
 
-        mMap.addMarker(markerOpt).showInfoWindow();
     }
 }
