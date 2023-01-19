@@ -128,6 +128,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     Map<String,Object> customProperties = new HashMap<>();
                     customProperties.put("customString", beach.freeSunbeds);
 
+                    // TODO get the temperature from the api and display it
+
+                    
+
                     Marker marker = mMap.addMarker(markerOptions);
                     marker.setTag(customProperties);
                 }
