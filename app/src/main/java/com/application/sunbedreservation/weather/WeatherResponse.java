@@ -1,5 +1,5 @@
 package com.application.sunbedreservation.weather;
 
-public class Main {
-    double temp;
+class WeatherResponse {
+    Main main;
 }

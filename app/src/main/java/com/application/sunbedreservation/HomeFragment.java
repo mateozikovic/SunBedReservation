@@ -15,7 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.application.sunbedreservation.weather.WeatherViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -109,6 +114,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("Beaches");
 
+        WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        viewModel.fetchTemperature("London");
+
+        viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
+
+
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -127,13 +138,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     
                     Map<String,Object> customProperties = new HashMap<>();
                     customProperties.put("customString", beach.freeSunbeds);
-
-                    // TODO get the temperature from the api and display it
-
-                    
-
                     Marker marker = mMap.addMarker(markerOptions);
                     marker.setTag(customProperties);
+
+                    // TODO get the temperature from the api and display it
+                    WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+                    viewModel.fetchTemperature("London");
+
+                    viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
                 }
             }
 
