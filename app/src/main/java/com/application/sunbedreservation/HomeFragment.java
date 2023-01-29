@@ -2,6 +2,7 @@ package com.application.sunbedreservation;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -126,9 +128,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 // cycle through documents in beaches collection and display a beach on the map
                 for(DataSnapshot beachSnapshot: snapshot.getChildren()) {
-                    Log.i("printout", String.valueOf(beachSnapshot.getValue()));
                     Beach beach = beachSnapshot.getValue(Beach.class);
-                    Log.i("test", String.valueOf(beach.locationLat));
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
@@ -146,6 +146,32 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     viewModel.fetchTemperature("London");
 
                     viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
+
+                    /*
+                          InfoWindow Click Listener
+                     */
+                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            try {
+                                SunbedReservationFragment fragment = new SunbedReservationFragment();
+
+                                //add arguments
+                                Bundle bundle = new Bundle();
+                                bundle.putString("beach_id", beachSnapshot.getKey());
+                                Log.i("beachkey", String.valueOf(beachSnapshot.getKey()));
+                                fragment.setArguments(bundle);
+
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_layout, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                            catch (Exception e){
+                                Log.e("Error", e.getMessage());
+                            }
+                        }
+                    });
                 }
             }
 
@@ -155,9 +181,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+
         //Set Custom InfoWindow Adapter
         CustomInfoWindowForGoogleMap adapter = new CustomInfoWindowForGoogleMap(getContext());
         mMap.setInfoWindowAdapter(adapter);
-
     }
 }

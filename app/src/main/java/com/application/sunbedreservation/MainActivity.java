@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        // this is used just to fill the database with dummy data
+
         /*toreDataInFirebase fillDB = new StoreDataInFirebase();
         fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
                 "44.84640377977642", "13.833914353971652", "20");
