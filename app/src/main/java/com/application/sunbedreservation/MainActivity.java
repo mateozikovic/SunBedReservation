@@ -1,14 +1,20 @@
 package com.application.sunbedreservation;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.application.sunbedreservation.databinding.ActivityMainBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +49,50 @@ public class MainActivity extends AppCompatActivity {
 
         // this is used just to fill the database with dummy data
 
-        /*toreDataInFirebase fillDB = new StoreDataInFirebase();
+        /* StoreDataInFirebase fillDB = new StoreDataInFirebase();
         fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
                 "44.84640377977642", "13.833914353971652", "20");
         fillDB.writeNewBeach("Pical Beach", "Plaza u blizini hotela Parentino", "pic.jpg",
                 "45.23498102948223", "13.596537451227437", "15");
         fillDB.writeNewBeach("Materada Beach", "Plaza u blizini hotela Materada", "pic.jpg",
                 "45.24926887641833", "13.591844956120799", "25");*/
+
+        /*
+        * TODO create a sub-document in each beach for beach prices and fill it with dummy data
+        * */
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference beachesRef = database.getReference("Beaches");
+        DatabaseReference sunbedPricesRef = beachesRef.child("sunbedPrices");
+
+        beachesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot beachSnapshot: snapshot.getChildren()){
+                    Log.i("beachtag", String.valueOf(beachSnapshot.getKey()));
+                    // get the document ID
+                    String documentID = beachSnapshot.getKey();
+
+                    // set the prices for all beaches
+                    SunbedPrices sunbedPrices = new SunbedPrices();
+                    sunbedPrices.setRow1June(20);
+                    sunbedPrices.setRow2June(18);
+                    sunbedPrices.setRow1July(25);
+                    sunbedPrices.setRow2July(23);
+                    sunbedPrices.setRow1August(27);
+                    sunbedPrices.setRow2August(25);
+                    sunbedPrices.setRow1September(18);
+                    sunbedPrices.setRow2September(16);
+
+                    beachesRef.child(documentID).child("BeachPrices").setValue(sunbedPrices);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
 }
 
