@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,9 +127,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                HashMap<String, Marker> markerMap = new HashMap<>();
                 // cycle through documents in beaches collection and display a beach on the map
                 for(DataSnapshot beachSnapshot: snapshot.getChildren()) {
                     Beach beach = beachSnapshot.getValue(Beach.class);
+                    String beachId = beachSnapshot.getKey();
+
+
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
@@ -137,15 +142,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pointer));
                     
                     Map<String,Object> customProperties = new HashMap<>();
+
                     customProperties.put("customString", beach.freeSunbeds);
                     Marker marker = mMap.addMarker(markerOptions);
                     marker.setTag(customProperties);
+                    markerMap.put(beachId, marker);
 
                     // TODO get the temperature from the api and display it
-                    WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
-                    viewModel.fetchTemperature("London");
-
-                    viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
+//                    WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+//                    viewModel.fetchTemperature("London");
+//
+//                    viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
 
                     /*
                           InfoWindow Click Listener
@@ -153,24 +160,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
-                            try {
-                                SunbedReservationFragment fragment = new SunbedReservationFragment();
 
-                                //add arguments
-                                Bundle bundle = new Bundle();
-                                bundle.putString("beach_id", beachSnapshot.getKey());
-                                Log.i("beachkey", String.valueOf(beachSnapshot.getKey()));
-                                fragment.setArguments(bundle);
+                            String documentId = null;
+                            for (Map.Entry<String, Marker> entry : markerMap.entrySet()) {
+                                if (entry.getValue().equals(marker)) {
+                                    documentId = entry.getKey();
+                                    break;
+                                }
+                            }
 
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.frame_layout, fragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            }
-                            catch (Exception e){
-                                Log.e("Error", e.getMessage());
-                            }
-                        }
+                            SunbedReservationFragment fragment = new SunbedReservationFragment();
+
+                            //add arguments
+                            Bundle bundle = new Bundle();
+                            bundle.putString("beach_id", documentId);
+                            Log.i("beachkey", String.valueOf(documentId));
+                            fragment.setArguments(bundle);
+
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.frame_layout, fragment);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+                    }
                     });
                 }
             }
@@ -180,8 +191,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         });
-
-
 
         //Set Custom InfoWindow Adapter
         CustomInfoWindowForGoogleMap adapter = new CustomInfoWindowForGoogleMap(getContext());
