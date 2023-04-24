@@ -17,16 +17,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.material.slider.Slider;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
+
 
 public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
     private int numSunbeds = 0;
+
+    int[] images = {R.drawable.one,
+            R.drawable.two,
+            R.drawable.three};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sunbed_reservation, container, false);
 
         // getting arguments from HomeFragment
         String sunbedId = getArguments().getString("beach_id");
+
+
 
         // send the beachId to the viewmodel, and get back the number of sunbeds from the DB
         mViewModel = new SunbedReservationViewModel(sunbedId);
@@ -47,6 +59,15 @@ public class SunbedReservationFragment extends Fragment {
                 }
             }
         });
+
+        SliderView sliderView = view.findViewById(R.id.image_slider);
+
+        SliderAdapter sliderAdapter = new SliderAdapter(images);
+
+        sliderView.setSliderAdapter(sliderAdapter);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
+        sliderView.startAutoCycle();
         return view;
     }
 }
