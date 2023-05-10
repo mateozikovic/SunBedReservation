@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.slider.Slider;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -38,15 +39,15 @@ public class SunbedReservationFragment extends Fragment {
         // getting arguments from HomeFragment
         String sunbedId = getArguments().getString("beach_id");
 
-
-
         // send the beachId to the viewmodel, and get back the number of sunbeds from the DB
         mViewModel = new SunbedReservationViewModel(sunbedId);
         mViewModel.getData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 numSunbeds = Integer.parseInt(s);
-                Log.i("fragment sunbeds", String.valueOf(numSunbeds));
+                Log.i("parseint", s);
+                TextView beachNameTitle = view.findViewById(R.id.beach_name_title);
+                // beachNameTitle.setText();
 
                 LinearLayout sunbedContainer = view.findViewById(R.id.sunbed_container);
                 for (int i = 0; i < numSunbeds; i++) {

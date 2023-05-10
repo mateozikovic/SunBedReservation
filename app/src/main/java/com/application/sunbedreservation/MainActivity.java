@@ -47,22 +47,21 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // this is used just to fill the database with dummy data
+         // this is used just to fill the database with dummy data
 
-        /* StoreDataInFirebase fillDB = new StoreDataInFirebase();
-        fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
-                "44.84640377977642", "13.833914353971652", "20");
-        fillDB.writeNewBeach("Pical Beach", "Plaza u blizini hotela Parentino", "pic.jpg",
-                "45.23498102948223", "13.596537451227437", "15");
-        fillDB.writeNewBeach("Materada Beach", "Plaza u blizini hotela Materada", "pic.jpg",
-                "45.24926887641833", "13.591844956120799", "25");*/
+//         StoreDataInFirebase fillDB = new StoreDataInFirebase();
+//        fillDB.writeNewBeach("Zlatne Stijene", "Lijepa plaza", "pic.jpg",
+//                "44.84640377977642", "13.833914353971652", "20");
+//        fillDB.writeNewBeach("Pical Beach", "Plaza u blizini hotela Parentino", "pic.jpg",
+//                "45.23498102948223", "13.596537451227437", "15");
+//        fillDB.writeNewBeach("Materada Beach", "Plaza u blizini hotela Materada", "pic.jpg",
+//                "45.24926887641833", "13.591844956120799", "25");
 
         /*
         * TODO create a sub-document in each beach for beach prices and fill it with dummy data
         * */
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference beachesRef = database.getReference("Beaches");
-        DatabaseReference sunbedPricesRef = beachesRef.child("sunbedPrices");
 
         beachesRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,17 +83,35 @@ public class MainActivity extends AppCompatActivity {
                     sunbedPrices.setRow2September(16);
 
                     beachesRef.child(documentID).child("BeachPrices").setValue(sunbedPrices);
+
+
+//                    Sunbed[] sunbeds = {
+//                            new Sunbed("sunbed1", 1, false),
+//                            new Sunbed("sunbed2", 1, false),
+//                            new Sunbed("sunbed3", 1, false),
+//                            new Sunbed("sunbed4", 1, false),
+//                            new Sunbed("sunbed5", 2, false),
+//                            new Sunbed("sunbed6", 2, false),
+//                            new Sunbed("sunbed7", 2, false),
+//                            new Sunbed("sunbed8", 2, false)
+//                    };
+//
+//                    for (Sunbed sunbed : sunbeds) {
+//                        String beachId = beachesRef.child("beaches").push().getKey();
+//                        beachesRef.child(documentID).child("sunbeds").child(sunbed.getId()).setValue(sunbed);
+//                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.i("BeachPrice Error", String.valueOf(error));
             }
         });
 
 
-}
+    }
+
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

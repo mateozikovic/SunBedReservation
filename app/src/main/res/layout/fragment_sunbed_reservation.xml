@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/beach">
+    android:orientation="vertical">
 
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/image_slider"
@@ -21,15 +23,25 @@
         app:sliderIndicatorSelectedColor="#5A5A5A"
         app:sliderIndicatorUnselectedColor="#FFF"
         app:sliderScrollTimeInSec="2"
-        app:sliderStartAutoCycle="true"/>
+        app:sliderStartAutoCycle="true" />
 
-
-    <LinearLayout
-        android:id="@+id/sunbed_container"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:id="@+id/beach_name_title"
+        />
 
-</RelativeLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2">
+
+        <LinearLayout
+            android:id="@+id/sunbed_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
+    </GridLayout>
+
+
+</LinearLayout>
