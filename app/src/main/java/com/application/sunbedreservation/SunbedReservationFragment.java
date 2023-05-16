@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.List;
+import java.util.Map;
 
 public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
@@ -38,7 +41,7 @@ public class SunbedReservationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sunbed_reservation, container, false);
 
-        // getting arguments from HomeFragment
+        // Getting arguments from HomeFragment
         String sunbedId = getArguments().getString("beach_id");
 
         // Initialize the ViewModel
@@ -46,13 +49,14 @@ public class SunbedReservationFragment extends Fragment {
 
         // Fetch the list of sunbeds
         mViewModel.fetchSunbeds(sunbedId);
-        mViewModel.getSunbedList().observe(getViewLifecycleOwner(), new Observer<List<Sunbed>>() {
+        mViewModel.getSunbedRows().observe(getViewLifecycleOwner(), new Observer<Map<Integer, List<Sunbed>>>() {
             @Override
-            public void onChanged(List<Sunbed> sunbeds) {
-                // Set up the GridView
-                GridView gridView = view.findViewById(R.id.sunbed_gridview);
-                sunbedAdapter = new SunbedAdapter(getContext(), sunbeds);
-                gridView.setAdapter(sunbedAdapter);
+            public void onChanged(Map<Integer, List<Sunbed>> sunbedMap) {
+                // Set up the RecyclerView
+                RecyclerView recyclerView = view.findViewById(R.id.sunbed_recyclerview);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                sunbedAdapter = new SunbedAdapter(getContext(), sunbedMap);
+                recyclerView.setAdapter(sunbedAdapter);
             }
         });
 

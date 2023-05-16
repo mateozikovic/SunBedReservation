@@ -18,12 +18,13 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SunbedReservationViewModel extends ViewModel {
-    private MutableLiveData<List<Sunbed>> sunbedList = new MutableLiveData<>();
+    private MutableLiveData<Map<Integer, List<Sunbed>>> sunbedRows = new MutableLiveData<>();
 
-    public LiveData<List<Sunbed>> getSunbedList() {
-        return sunbedList;
+    public LiveData<Map<Integer, List<Sunbed>>> getSunbedRows() {
+        return sunbedRows;
     }
 
     public void fetchSunbeds(String sunbedId) {
@@ -32,12 +33,20 @@ public class SunbedReservationViewModel extends ViewModel {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Sunbed> sunbeds = new ArrayList<>();
+                Map<Integer, List<Sunbed>> sunbedMap = new HashMap<>();
+
                 for (DataSnapshot childSnapshot : snapshot.child("sunbeds").getChildren()) {
                     Sunbed sunbed = childSnapshot.getValue(Sunbed.class);
-                    sunbeds.add(sunbed);
+                    if (sunbed != null) {
+                        int row = sunbed.getRow();
+                        if (!sunbedMap.containsKey(row)) {
+                            sunbedMap.put(row, new ArrayList<>());
+                        }
+                        sunbedMap.get(row).add(sunbed);
+                    }
                 }
-                sunbedList.setValue(sunbeds);
+
+                sunbedRows.setValue(sunbedMap);
             }
 
             @Override
