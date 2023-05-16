@@ -15,11 +15,11 @@ import java.util.Map;
 
 public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedViewHolder> {
     private Context context;
-    private Map<Integer, List<Sunbed>> sunbedMap;
+    private List<Sunbed> sunbedList;
 
-    public SunbedAdapter(Context context, Map<Integer, List<Sunbed>> sunbedMap) {
+    public SunbedAdapter(Context context, List<Sunbed> sunbedList) {
         this.context = context;
-        this.sunbedMap = sunbedMap;
+        this.sunbedList = sunbedList;
     }
 
     @NonNull
@@ -31,32 +31,16 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
 
     @Override
     public void onBindViewHolder(@NonNull SunbedViewHolder holder, int position) {
-        // Find the row and index of the sunbed in the map
-        int rowIndex = position / 2;
-        int indexInRow = position % 2;
+        Sunbed sunbed = sunbedList.get(position);
 
-        // Get the list of sunbeds for the row
-        List<Sunbed> sunbeds = sunbedMap.get(rowIndex);
-
-        if (sunbeds != null && indexInRow < sunbeds.size()) {
-            // Get the Sunbed object for the current position
-            Sunbed sunbed = sunbeds.get(indexInRow);
-
-            // Set the image resource based on the sunbed state
-            int imageResource = sunbed.isTaken() ? R.drawable.sunbed : R.drawable.sunbed;
-            holder.sunbedImageView.setImageResource(imageResource);
-        }
+        // Set the image resource based on the sunbed state
+        int imageResource = sunbed.isTaken() ? R.drawable.sunbed_taken : R.drawable.sunbed_free;
+        holder.sunbedImageView.setImageResource(imageResource);
     }
 
     @Override
     public int getItemCount() {
-        int totalCount = 0;
-
-        for (List<Sunbed> sunbeds : sunbedMap.values()) {
-            totalCount += sunbeds.size();
-        }
-
-        return totalCount;
+        return sunbedList.size();
     }
 
     static class SunbedViewHolder extends RecyclerView.ViewHolder {

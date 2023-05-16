@@ -26,6 +26,7 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +53,16 @@ public class SunbedReservationFragment extends Fragment {
         mViewModel.getSunbedRows().observe(getViewLifecycleOwner(), new Observer<Map<Integer, List<Sunbed>>>() {
             @Override
             public void onChanged(Map<Integer, List<Sunbed>> sunbedMap) {
+                // Convert sunbedMap to a flat list of sunbeds
+                List<Sunbed> sunbedList = new ArrayList<>();
+                for (List<Sunbed> row : sunbedMap.values()) {
+                    sunbedList.addAll(row);
+                }
+
                 // Set up the RecyclerView
                 RecyclerView recyclerView = view.findViewById(R.id.sunbed_recyclerview);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                sunbedAdapter = new SunbedAdapter(getContext(), sunbedMap);
+                sunbedAdapter = new SunbedAdapter(getContext(), sunbedList);
                 recyclerView.setAdapter(sunbedAdapter);
             }
         });
