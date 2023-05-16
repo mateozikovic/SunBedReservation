@@ -31,17 +31,13 @@
         android:id="@+id/beach_name_title"
         />
 
-    <GridLayout
+    <GridView
+        android:id="@+id/sunbed_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnCount="2">
-
-        <LinearLayout
-            android:id="@+id/sunbed_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"></LinearLayout>
-    </GridLayout>
-
+        android:numColumns="2"
+        android:verticalSpacing="8dp"
+        android:horizontalSpacing="8dp"
+        android:padding="8dp" />
 
 </LinearLayout>

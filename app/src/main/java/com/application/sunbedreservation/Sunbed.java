@@ -1,18 +1,18 @@
 package com.application.sunbedreservation;
 
-// Model for saving a subdocument where it contains positions of the sunbeds
-
 public class Sunbed {
     private String id;
     private int row;
-    private boolean isTaken;
+    private boolean taken;
 
-    public Sunbed() {}
+    public Sunbed() {
+        // Required empty public constructor for Firebase
+    }
 
-    public Sunbed(String id, int row, boolean isTaken) {
+    public Sunbed(String id, int row, boolean taken) {
         this.id = id;
         this.row = row;
-        this.isTaken = isTaken;
+        this.taken = taken;
     }
 
     public String getId() {
@@ -31,7 +31,11 @@ public class Sunbed {
         this.row = row;
     }
 
-    public void setTaken(boolean isTaken) { this.isTaken = isTaken; };
+    public boolean isTaken() {
+        return taken;
+    }
 
-    public boolean getTaken() { return isTaken; };
+    public void setTaken(boolean taken) {
+        this.taken = taken;
+    }
 }
