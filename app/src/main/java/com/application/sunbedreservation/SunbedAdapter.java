@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +37,16 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         // Set the image resource based on the sunbed state
         int imageResource = sunbed.isTaken() ? R.drawable.sunbed_taken : R.drawable.sunbed_free;
         holder.sunbedImageView.setImageResource(imageResource);
+
+        // Set the click listener on the sunbed item
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sunbedId = sunbed.getId();
+                Toast.makeText(context, "Sunbed selected: " + sunbedId, Toast.LENGTH_SHORT).show();
+                // Perform further actions on sunbed selection if needed
+            }
+        });
     }
 
     @Override

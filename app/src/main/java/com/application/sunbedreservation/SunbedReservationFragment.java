@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -61,7 +62,7 @@ public class SunbedReservationFragment extends Fragment {
 
                 // Set up the RecyclerView
                 RecyclerView recyclerView = view.findViewById(R.id.sunbed_recyclerview);
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4, GridLayoutManager.HORIZONTAL, false));
                 sunbedAdapter = new SunbedAdapter(getContext(), sunbedList);
                 recyclerView.setAdapter(sunbedAdapter);
             }
