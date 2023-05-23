@@ -23,7 +23,8 @@
             android:name=".ForgotPassword"
             android:exported="false" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

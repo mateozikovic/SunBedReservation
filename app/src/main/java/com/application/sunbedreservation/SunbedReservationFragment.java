@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.slider.Slider;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
@@ -129,15 +132,24 @@ public class SunbedReservationFragment extends Fragment {
     }
 
     private void showDatePicker() {
+        // Set the date range for the MaterialDatePicker
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        long today = MaterialDatePicker.todayInUtcMilliseconds();
+        long startOfDay = today - (today % TimeUnit.DAYS.toMillis(1)); // Set the start of the current day
+        constraintsBuilder.setStart(startOfDay);
+        // Set the end date as desired, e.g., 30 days from today
+        long end = startOfDay + TimeUnit.DAYS.toMillis(30);
+        constraintsBuilder.setEnd(end);
+
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Select Date");
+        builder.setCalendarConstraints(constraintsBuilder.build());
 
         final MaterialDatePicker<Long> materialDatePicker = builder.build();
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selectedDate) {
                 // Handle the selected date here
-                // You can update the UI or perform any other logic with the selected date
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(selectedDate);
                 // Do something with the selected date
@@ -146,4 +158,5 @@ public class SunbedReservationFragment extends Fragment {
 
         materialDatePicker.show(getParentFragmentManager(), "DATE_PICKER_TAG");
     }
+
 }
