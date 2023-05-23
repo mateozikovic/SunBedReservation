@@ -1,5 +1,6 @@
 package com.application.sunbedreservation;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,12 +31,17 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+
 
 public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
     private SunbedAdapter sunbedAdapter;
+    private FrameLayout datePickerContainer;
 
     int[] images = {R.drawable.one,
             R.drawable.two,
@@ -43,6 +51,46 @@ public class SunbedReservationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sunbed_reservation, container, false);
 
+        Button selectDateButton = view.findViewById(R.id.select_date_button);
+        selectDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+
+        // Initialize the datePickerContainer
+        datePickerContainer = view.findViewById(R.id.date_picker_container);
+
+        // Create the MaterialDatePicker
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Select Date");
+
+        final MaterialDatePicker<Long> materialDatePicker = builder.build();
+
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selectedDate) {
+                // Handle the selected date here
+                // You can update the UI or perform any other logic with the selected date
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(selectedDate);
+                // Do something with the selected date
+            }
+        });
+
+        // Add the MaterialDatePicker to the datePickerContainer
+        Dialog datePickerDialog = materialDatePicker.getDialog();
+        if (datePickerDialog != null) {
+            View datePickerView = datePickerDialog.findViewById(android.R.id.content);
+            if (datePickerView != null) {
+                ViewGroup parent = (ViewGroup) datePickerView.getParent();
+                if (parent != null) {
+                    parent.removeView(datePickerView);
+                }
+                datePickerContainer.addView(datePickerView);
+            }
+        }
         // Getting arguments from HomeFragment
         String sunbedId = getArguments().getString("beach_id");
 
@@ -76,6 +124,26 @@ public class SunbedReservationFragment extends Fragment {
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
         sliderView.startAutoCycle();
+
         return view;
+    }
+
+    private void showDatePicker() {
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Select Date");
+
+        final MaterialDatePicker<Long> materialDatePicker = builder.build();
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selectedDate) {
+                // Handle the selected date here
+                // You can update the UI or perform any other logic with the selected date
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(selectedDate);
+                // Do something with the selected date
+            }
+        });
+
+        materialDatePicker.show(getParentFragmentManager(), "DATE_PICKER_TAG");
     }
 }
