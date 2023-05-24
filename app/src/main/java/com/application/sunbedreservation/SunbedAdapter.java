@@ -17,6 +17,7 @@ import java.util.Map;
 public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedViewHolder> {
     private Context context;
     private List<Sunbed> sunbedList;
+    private Sunbed selectedSunbed;
 
     public SunbedAdapter(Context context, List<Sunbed> sunbedList) {
         this.context = context;
@@ -42,6 +43,7 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedSunbed = sunbed; // Update the selected sunbed
                 String sunbedId = sunbed.getId();
                 Toast.makeText(context, "Sunbed selected: " + sunbedId, Toast.LENGTH_SHORT).show();
                 // Perform further actions on sunbed selection if needed
@@ -52,6 +54,10 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
     @Override
     public int getItemCount() {
         return sunbedList.size();
+    }
+
+    public Sunbed getSelectedSunbed() {
+        return selectedSunbed;
     }
 
     static class SunbedViewHolder extends RecyclerView.ViewHolder {

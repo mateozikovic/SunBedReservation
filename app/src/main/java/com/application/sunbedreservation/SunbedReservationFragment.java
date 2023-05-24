@@ -24,35 +24,51 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
-
 public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
     private SunbedAdapter sunbedAdapter;
     private FrameLayout datePickerContainer;
+    private String userId;
+    private String selectedDate;
 
-    int[] images = {R.drawable.one,
-            R.drawable.two,
-            R.drawable.three};
+    int[] images = {R.drawable.one, R.drawable.two, R.drawable.three};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sunbed_reservation, container, false);
+        Button reserveButton = view.findViewById(R.id.reserve_button);
+
+        // Image gallery for the beach
+        SliderView sliderView = view.findViewById(R.id.image_slider);
+        SliderAdapter sliderAdapter = new SliderAdapter(images);
+        sliderView.setSliderAdapter(sliderAdapter);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
+        sliderView.startAutoCycle();
 
         Button selectDateButton = view.findViewById(R.id.select_date_button);
         selectDateButton.setOnClickListener(new View.OnClickListener() {
@@ -65,40 +81,20 @@ public class SunbedReservationFragment extends Fragment {
         // Initialize the datePickerContainer
         datePickerContainer = view.findViewById(R.id.date_picker_container);
 
-        // Create the MaterialDatePicker
-        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText("Select Date");
+        // Initialize the ViewModel
+        mViewModel = new ViewModelProvider(this).get(SunbedReservationViewModel.class);
 
-        final MaterialDatePicker<Long> materialDatePicker = builder.build();
-
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @Override
-            public void onPositiveButtonClick(Long selectedDate) {
-                // Handle the selected date here
-                // You can update the UI or perform any other logic with the selected date
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(selectedDate);
-                // Do something with the selected date
-            }
-        });
-
-        // Add the MaterialDatePicker to the datePickerContainer
-        Dialog datePickerDialog = materialDatePicker.getDialog();
-        if (datePickerDialog != null) {
-            View datePickerView = datePickerDialog.findViewById(android.R.id.content);
-            if (datePickerView != null) {
-                ViewGroup parent = (ViewGroup) datePickerView.getParent();
-                if (parent != null) {
-                    parent.removeView(datePickerView);
-                }
-                datePickerContainer.addView(datePickerView);
-            }
-        }
         // Getting arguments from HomeFragment
         String sunbedId = getArguments().getString("beach_id");
 
-        // Initialize the ViewModel
-        mViewModel = new ViewModelProvider(this).get(SunbedReservationViewModel.class);
+        // Observe user ID
+        mViewModel.getUserId().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String uid) {
+                userId = uid;
+                reserveButton.setEnabled(true); // Enable the Reserve button
+            }
+        });
 
         // Fetch the list of sunbeds
         mViewModel.fetchSunbeds(sunbedId);
@@ -119,27 +115,37 @@ public class SunbedReservationFragment extends Fragment {
             }
         });
 
-        SliderView sliderView = view.findViewById(R.id.image_slider);
+        reserveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedDate != null) {
+                    // Get the selected sunbed from the adapter
+                    Sunbed selectedSunbed = sunbedAdapter.getSelectedSunbed();
+                    if (selectedSunbed != null) {
+                        // Create a reservation object
+                        Reservation reservation = new Reservation(userId, selectedSunbed.getId(), selectedDate);
 
-        SliderAdapter sliderAdapter = new SliderAdapter(images);
-
-        sliderView.setSliderAdapter(sliderAdapter);
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
-        sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
-        sliderView.startAutoCycle();
+                        // Save the reservation to Firebase or perform any other necessary actions
+                        saveReservation(reservation);
+                    } else {
+                        Toast.makeText(getContext(), "Please select a sunbed", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please select a date", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
 
     private void showDatePicker() {
-        // Set the date range for the MaterialDatePicker
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-        long today = MaterialDatePicker.todayInUtcMilliseconds();
-        long startOfDay = today - (today % TimeUnit.DAYS.toMillis(1)); // Set the start of the current day
-        constraintsBuilder.setStart(startOfDay);
-        // Set the end date as desired, e.g., 30 days from today
-        long end = startOfDay + TimeUnit.DAYS.toMillis(30);
-        constraintsBuilder.setEnd(end);
+        Calendar today = Calendar.getInstance();
+        today.clear(Calendar.HOUR_OF_DAY);
+        today.clear(Calendar.MINUTE);
+        today.clear(Calendar.SECOND);
+        constraintsBuilder.setValidator(DateValidatorPointForward.from(today.getTimeInMillis()));
 
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Select Date");
@@ -149,14 +155,49 @@ public class SunbedReservationFragment extends Fragment {
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selectedDate) {
-                // Handle the selected date here
+                // Handle the selected date
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(selectedDate);
-                // Do something with the selected date
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String formattedDate = dateFormat.format(calendar.getTime());
+
+                // Save the selected date
+                SunbedReservationFragment.this.selectedDate = formattedDate;
+
+                // Update the UI to display the selected date
+                Button selectDateButton = getView().findViewById(R.id.select_date_button);
+                selectDateButton.setText(formattedDate);
             }
         });
 
-        materialDatePicker.show(getParentFragmentManager(), "DATE_PICKER_TAG");
+        materialDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER");
     }
+
+
+    private void saveReservation(Reservation reservation) {
+        DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("reservations");
+
+        // Generate a new unique key for the reservation
+        String reservationId = reservationsRef.push().getKey();
+
+        // Save the reservation under the generated key
+        reservationsRef.child(reservationId).setValue(reservation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Reservation", "Reservation saved with ID: " + reservationId);
+                        Toast.makeText(getContext(), "Reservation saved successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Reservation", "Error saving reservation", e);
+                        Toast.makeText(getContext(), "Failed to save reservation", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
 }

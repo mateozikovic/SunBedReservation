@@ -6,7 +6,6 @@ public class Reservation {
     private String reservationDate;
 
     public Reservation() {
-        // Default constructor required for Firebase
     }
 
     public Reservation(String userId, String sunbedId, String reservationDate) {

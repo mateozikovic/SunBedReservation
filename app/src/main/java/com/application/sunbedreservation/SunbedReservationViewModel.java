@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,17 +26,19 @@ import java.util.Map;
 
 public class SunbedReservationViewModel extends ViewModel {
     private MutableLiveData<Map<Integer, List<Sunbed>>> sunbedRows = new MutableLiveData<>();
-    private DatabaseReference reservationRef;
+    private MutableLiveData<String> currentUserId = new MutableLiveData<>();
 
     public LiveData<Map<Integer, List<Sunbed>>> getSunbedRows() {
         return sunbedRows;
     }
 
+    public LiveData<String> getUserId() {
+        return currentUserId;
+    }
     public void fetchSunbeds(String sunbedId) {
-        DatabaseReference beachRef = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);
-        reservationRef = FirebaseDatabase.getInstance().getReference("Reservations");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);
 
-        beachRef.addValueEventListener(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Map<Integer, List<Sunbed>> sunbedMap = new HashMap<>();
@@ -60,26 +64,15 @@ public class SunbedReservationViewModel extends ViewModel {
         });
     }
 
-    public void makeReservation(String userId, String sunbedId, String reservationDate) {
-        DatabaseReference userReservationRef = reservationRef.child(userId);
-        Reservation reservation = new Reservation(userId, sunbedId, reservationDate);
-
-        String reservationId = userReservationRef.push().getKey();
-        userReservationRef.child(reservationId).setValue(reservation)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Reservation successful
-                        Log.d("Sunbed Reservation", "Reservation added to Firebase");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Reservation failed
-                        Log.e("Sunbed Reservation", "Failed to add reservation to Firebase: " + e.getMessage());
-                    }
-                });
+    private String getCurrentUserId() {
+        // Replace this with your logic to get the user ID
+        // For example, if you are using Firebase Authentication, you can retrieve the user ID as follows:
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            return null;
+        }
     }
 }
 
