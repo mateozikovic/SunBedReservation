@@ -37,7 +37,6 @@ public class SunbedReservationViewModel extends ViewModel {
     }
     public void fetchSunbeds(String sunbedId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -53,10 +52,8 @@ public class SunbedReservationViewModel extends ViewModel {
                         sunbedMap.get(row).add(sunbed);
                     }
                 }
-
                 sunbedRows.setValue(sunbedMap);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("Failed to get data from Firebase", error.getMessage());
@@ -65,13 +62,43 @@ public class SunbedReservationViewModel extends ViewModel {
     }
 
     private String getCurrentUserId() {
-        // Replace this with your logic to get the user ID
-        // For example, if you are using Firebase Authentication, you can retrieve the user ID as follows:
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             return currentUser.getUid();
         } else {
             return null;
+        }
+    }
+
+    public void saveReservation(String beachId, Reservation reservation) {
+        String userId = getCurrentUserId();
+
+        if (userId != null) {
+            DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
+            String reservationId = reservationsRef.push().getKey();
+
+            if (reservationId != null) {
+                reservation.setUserId(userId);
+                reservation.setBeachId(beachId); // Set the selected beach ID
+                reservationsRef.child(reservationId).setValue(reservation)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Reservation saved successfully
+                                Log.d("Reservation", "Reservation saved with ID: " + reservationId);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Failed to save reservation
+                                Log.e("Reservation", "Error saving reservation", e);
+                            }
+                        });
+            }
+        } else {
+            // Unable to get current user ID
+            Log.e("Reservation", "Unable to get current user ID");
         }
     }
 }

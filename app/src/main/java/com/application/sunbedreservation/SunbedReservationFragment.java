@@ -52,7 +52,6 @@ public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
     private SunbedAdapter sunbedAdapter;
     private FrameLayout datePickerContainer;
-    private String userId;
     private String selectedDate;
 
     int[] images = {R.drawable.one, R.drawable.two, R.drawable.three};
@@ -91,7 +90,6 @@ public class SunbedReservationFragment extends Fragment {
         mViewModel.getUserId().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String uid) {
-                userId = uid;
                 reserveButton.setEnabled(true); // Enable the Reserve button
             }
         });
@@ -123,10 +121,15 @@ public class SunbedReservationFragment extends Fragment {
                     Sunbed selectedSunbed = sunbedAdapter.getSelectedSunbed();
                     if (selectedSunbed != null) {
                         // Create a reservation object
-                        Reservation reservation = new Reservation(userId, selectedSunbed.getId(), selectedDate);
+                        Reservation reservation = new Reservation();
+                        reservation.setSunbedId(selectedSunbed.getId());
+                        reservation.setReservationDate(selectedDate);
 
-                        // Save the reservation to Firebase or perform any other necessary actions
-                        saveReservation(reservation);
+                        // Get the beach ID from the fragment arguments
+                        String beachId = getArguments().getString("beach_id");
+
+                        // Save the reservation using the ViewModel and pass the beach ID
+                        mViewModel.saveReservation(beachId, reservation);
                     } else {
                         Toast.makeText(getContext(), "Please select a sunbed", Toast.LENGTH_SHORT).show();
                     }
@@ -173,31 +176,4 @@ public class SunbedReservationFragment extends Fragment {
 
         materialDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER");
     }
-
-
-    private void saveReservation(Reservation reservation) {
-        DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("reservations");
-
-        // Generate a new unique key for the reservation
-        String reservationId = reservationsRef.push().getKey();
-
-        // Save the reservation under the generated key
-        reservationsRef.child(reservationId).setValue(reservation)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Reservation", "Reservation saved with ID: " + reservationId);
-                        Toast.makeText(getContext(), "Reservation saved successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Reservation", "Error saving reservation", e);
-                        Toast.makeText(getContext(), "Failed to save reservation", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-
 }
