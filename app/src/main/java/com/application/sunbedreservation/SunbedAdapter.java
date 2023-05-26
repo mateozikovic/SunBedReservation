@@ -42,8 +42,7 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         Sunbed sunbed = sunbedList.get(position);
 
         // Set the image resource based on the sunbed state
-        int imageResource = sunbed.isTaken() ? R.drawable.sunbed_taken : R.drawable.sunbed_free;
-        holder.sunbedImageView.setImageResource(imageResource);
+        holder.sunbedImageView.setImageResource(R.drawable.sunbed_free);
 
         // Set the background color based on sunbed selection
         int backgroundColor = selectedSunbeds.contains(sunbed) ? R.color.selected_sunbed_color : android.R.color.transparent;

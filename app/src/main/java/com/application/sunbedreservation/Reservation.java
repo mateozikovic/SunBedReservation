@@ -50,5 +50,7 @@ public class Reservation {
     public void setSunbedIds(List<String> sunbedIds) {
         this.sunbedIds = sunbedIds;
     }
+
+
 }
 

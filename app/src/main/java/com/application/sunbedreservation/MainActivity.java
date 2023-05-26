@@ -86,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 //                    Sunbed[] sunbeds = {
-//                            new Sunbed("sunbed1", 1, false),
-//                            new Sunbed("sunbed2", 1, false),
-//                            new Sunbed("sunbed3", 1, false),
-//                            new Sunbed("sunbed4", 1, false),
-//                            new Sunbed("sunbed5", 2, false),
-//                            new Sunbed("sunbed6", 2, false),
-//                            new Sunbed("sunbed7", 2, false),
-//                            new Sunbed("sunbed8", 2, false)
+//                            new Sunbed("sunbed1", 1),
+//                            new Sunbed("sunbed2", 1),
+//                            new Sunbed("sunbed3", 1),
+//                            new Sunbed("sunbed4", 1),
+//                            new Sunbed("sunbed5", 2),
+//                            new Sunbed("sunbed6", 2),
+//                            new Sunbed("sunbed7", 2),
+//                            new Sunbed("sunbed8", 2)
 //                    };
 //
 //                    for (Sunbed sunbed : sunbeds) {

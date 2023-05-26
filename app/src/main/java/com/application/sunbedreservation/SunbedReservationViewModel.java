@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,35 +72,71 @@ public class SunbedReservationViewModel extends ViewModel {
     }
 
     public void saveReservation(String beachId, Reservation reservation) {
-        String userId = getCurrentUserId();
+        DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
 
-        if (userId != null) {
-            DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
-            String reservationId = reservationsRef.push().getKey();
+        // Generate a new reservation ID
+        String reservationId = reservationsRef.push().getKey();
 
-            if (reservationId != null) {
-                reservation.setUserId(userId);
-                reservation.setBeachId(beachId); // Set the selected beach ID
-                reservationsRef.child(reservationId).setValue(reservation)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // Reservation saved successfully
-                                Log.d("Reservation", "Reservation saved with ID: " + reservationId);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Failed to save reservation
-                                Log.e("Reservation", "Error saving reservation", e);
-                            }
-                        });
-            }
-        } else {
-            // Unable to get current user ID
-            Log.e("Reservation", "Unable to get current user ID");
-        }
+        // Save the reservation to the "reservations" node
+        reservationsRef.child(reservationId).setValue(reservation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Reservation saved successfully
+
+                        // Update the reserved dates for each selected sunbed
+                        List<String> sunbedIds = reservation.getSunbedIds();
+                        String reservationDate = reservation.getReservationDate();
+
+                        for (String sunbedId : sunbedIds) {
+                            DatabaseReference sunbedRef = FirebaseDatabase.getInstance().getReference("Beaches")
+                                    .child(beachId)
+                                    .child("sunbeds")
+                                    .child(sunbedId);
+
+                            sunbedRef.child("reservedDates").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    List<String> reservedDates = new ArrayList<>();
+                                    if (snapshot.exists()) {
+                                        // Get the current reserved dates
+                                        reservedDates = snapshot.getValue(new GenericTypeIndicator<List<String>>() {});
+                                    }
+
+                                    // Add the reservation date to the reserved dates
+                                    reservedDates.add(reservationDate);
+
+                                    // Update the reserved dates for the sunbed
+                                    sunbedRef.child("reservedDates").setValue(reservedDates)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Reserved dates updated successfully
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update reserved dates
+                                                }
+                                            });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    // Database read operation canceled
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to save reservation
+                    }
+                });
     }
+
 }
 

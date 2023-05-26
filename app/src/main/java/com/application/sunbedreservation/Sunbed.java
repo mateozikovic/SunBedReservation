@@ -1,18 +1,19 @@
 package com.application.sunbedreservation;
 
+import java.util.List;
+
 public class Sunbed {
     private String id;
     private int row;
-    private boolean taken;
+    private List<String> reservedDates;
 
     public Sunbed() {
         // Required empty public constructor for Firebase
     }
 
-    public Sunbed(String id, int row, boolean taken) {
+    public Sunbed(String id, int row) {
         this.id = id;
         this.row = row;
-        this.taken = taken;
     }
 
     public String getId() {
@@ -31,11 +32,11 @@ public class Sunbed {
         this.row = row;
     }
 
-    public boolean isTaken() {
-        return taken;
+    public List<String> getReservedDates() {
+        return reservedDates;
     }
 
-    public void setTaken(boolean taken) {
-        this.taken = taken;
+    public void setReservedDates(List<String> reservedDates) {
+        this.reservedDates = reservedDates;
     }
 }
