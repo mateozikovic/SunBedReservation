@@ -40,6 +40,7 @@ import com.smarteist.autoimageslider.SliderView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -117,12 +118,16 @@ public class SunbedReservationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (selectedDate != null) {
-                    // Get the selected sunbed from the adapter
-                    Sunbed selectedSunbed = sunbedAdapter.getSelectedSunbed();
-                    if (selectedSunbed != null) {
+                    // Get the selected sunbeds from the adapter
+                    List<Sunbed> selectedSunbeds = sunbedAdapter.getSelectedSunbeds();
+                    if (!selectedSunbeds.isEmpty()) {
                         // Create a reservation object
                         Reservation reservation = new Reservation();
-                        reservation.setSunbedId(selectedSunbed.getId());
+                        List<String> sunbedIds = new ArrayList<>();
+                        for (Sunbed sunbed : selectedSunbeds) {
+                            sunbedIds.add(sunbed.getId());
+                        }
+                        reservation.setSunbedIds(sunbedIds);
                         reservation.setReservationDate(selectedDate);
 
                         // Get the beach ID from the fragment arguments
@@ -131,7 +136,7 @@ public class SunbedReservationFragment extends Fragment {
                         // Save the reservation using the ViewModel and pass the beach ID
                         mViewModel.saveReservation(beachId, reservation);
                     } else {
-                        Toast.makeText(getContext(), "Please select a sunbed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please select at least one sunbed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "Please select a date", Toast.LENGTH_SHORT).show();

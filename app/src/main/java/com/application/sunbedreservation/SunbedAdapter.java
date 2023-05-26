@@ -1,6 +1,7 @@
 package com.application.sunbedreservation;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +10,24 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedViewHolder> {
     private Context context;
     private List<Sunbed> sunbedList;
-    private Sunbed selectedSunbed;
+    private List<Sunbed> selectedSunbeds;
 
     public SunbedAdapter(Context context, List<Sunbed> sunbedList) {
         this.context = context;
         this.sunbedList = sunbedList;
+        this.selectedSunbeds = new ArrayList<>();
     }
 
     @NonNull
@@ -39,13 +45,22 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         int imageResource = sunbed.isTaken() ? R.drawable.sunbed_taken : R.drawable.sunbed_free;
         holder.sunbedImageView.setImageResource(imageResource);
 
+        // Set the background color based on sunbed selection
+        int backgroundColor = selectedSunbeds.contains(sunbed) ? R.color.selected_sunbed_color : android.R.color.transparent;
+        holder.itemView.setBackgroundColor(ContextCompat.getColor(context, backgroundColor));
+
         // Set the click listener on the sunbed item
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedSunbed = sunbed; // Update the selected sunbed
-                String sunbedId = sunbed.getId();
-                Toast.makeText(context, "Sunbed selected: " + sunbedId, Toast.LENGTH_SHORT).show();
+                if (selectedSunbeds.contains(sunbed)) {
+                    selectedSunbeds.remove(sunbed);
+                } else {
+                    selectedSunbeds.add(sunbed);
+                }
+
+                notifyDataSetChanged(); // Update the item view
+
                 // Perform further actions on sunbed selection if needed
             }
         });
@@ -56,8 +71,8 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         return sunbedList.size();
     }
 
-    public Sunbed getSelectedSunbed() {
-        return selectedSunbed;
+    public List<Sunbed> getSelectedSunbeds() {
+        return selectedSunbeds;
     }
 
     static class SunbedViewHolder extends RecyclerView.ViewHolder {
@@ -69,3 +84,5 @@ public class SunbedAdapter extends RecyclerView.Adapter<SunbedAdapter.SunbedView
         }
     }
 }
+
+
