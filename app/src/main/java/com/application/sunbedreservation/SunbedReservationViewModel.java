@@ -77,6 +77,9 @@ public class SunbedReservationViewModel extends ViewModel {
         // Generate a new reservation ID
         String reservationId = reservationsRef.push().getKey();
 
+        // Add the beach ID to the reservation data
+        reservation.setBeachId(beachId);
+
         // Save the reservation to the "reservations" node
         reservationsRef.child(reservationId).setValue(reservation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -137,6 +140,38 @@ public class SunbedReservationViewModel extends ViewModel {
                     }
                 });
     }
+
+    public void fetchReservedDatesByBeach() {
+        DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
+        reservationsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, List<String>> reservedDatesByBeach = new HashMap<>();
+
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    Reservation reservation = childSnapshot.getValue(Reservation.class);
+                    if (reservation != null) {
+                        String beachId = reservation.getBeachId();
+                        String reservationDate = reservation.getReservationDate();
+
+                        if (!reservedDatesByBeach.containsKey(beachId)) {
+                            reservedDatesByBeach.put(beachId, new ArrayList<>());
+                        }
+                        reservedDatesByBeach.get(beachId).add(reservationDate);
+                    }
+                }
+
+                // Do something with the reserved dates ordered by beach
+                // You can update a LiveData object or perform any other desired operation
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Failed to get data from Firebase", error.getMessage());
+            }
+        });
+    }
+
 
 }
 
