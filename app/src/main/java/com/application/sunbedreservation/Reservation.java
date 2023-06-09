@@ -5,6 +5,7 @@ import java.util.List;
 public class Reservation {
     private String userId;
     private String beachId;
+    private String beachTitle;
     private String reservationDate;
     private List<String> sunbedIds;
 
@@ -12,9 +13,10 @@ public class Reservation {
         // Default constructor required for Firebase
     }
 
-    public Reservation(String userId, String beachId, String reservationDate, List<String> sunbedIds) {
+    public Reservation(String userId, String beachId, String beachTitle, String reservationDate, List<String> sunbedIds) {
         this.userId = userId;
         this.beachId = beachId;
+        this.beachTitle = beachTitle;
         this.reservationDate = reservationDate;
         this.sunbedIds = sunbedIds;
     }
@@ -33,6 +35,14 @@ public class Reservation {
 
     public void setBeachId(String beachId) {
         this.beachId = beachId;
+    }
+
+    public String getBeachTitle() {
+        return beachTitle;
+    }
+
+    public void setBeachTitle(String beachTitle) {
+        this.beachTitle = beachTitle;
     }
 
     public String getReservationDate() {
