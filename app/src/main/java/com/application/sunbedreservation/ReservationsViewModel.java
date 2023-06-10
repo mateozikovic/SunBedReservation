@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,13 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationsViewModel extends ViewModel {
-    private String currentUserId;
     private MutableLiveData<List<Reservation>> reservationsLiveData;
-
-    public void setCurrentUserId(String currentUserId) {
-        this.currentUserId = currentUserId;
-        loadReservations();
-    }
+    private String currentUserId;
 
     public LiveData<List<Reservation>> getReservationsLiveData() {
         if (reservationsLiveData == null) {
@@ -32,6 +25,10 @@ public class ReservationsViewModel extends ViewModel {
             loadReservations();
         }
         return reservationsLiveData;
+    }
+
+    public void setCurrentUserId(String currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     private void loadReservations() {
@@ -58,6 +55,7 @@ public class ReservationsViewModel extends ViewModel {
         });
     }
 }
+
 
 
 

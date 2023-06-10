@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- fragment_reservations.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CA1212"
-    tools:context=".ReservationsFragment">
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reservationsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-</FrameLayout>
+        android:layout_height="match_parent" />
+
+</LinearLayout>
