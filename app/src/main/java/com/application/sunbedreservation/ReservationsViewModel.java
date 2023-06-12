@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +44,7 @@ public class ReservationsViewModel extends ViewModel {
 
                 for (DataSnapshot reservationSnapshot : dataSnapshot.getChildren()) {
                     Reservation reservation = reservationSnapshot.getValue(Reservation.class);
+                    reservation.setReservationId(reservationSnapshot.getKey());
                     reservationsList.add(reservation);
                 }
 
@@ -53,6 +56,25 @@ public class ReservationsViewModel extends ViewModel {
                 // Handle any database error
             }
         });
+    }
+
+    public void deleteReservation(Reservation reservation) {
+        DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
+        String reservationId = reservation.getReservationId();
+
+        reservationsRef.child(reservationId).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Deletion successful
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle deletion failure
+                    }
+                });
     }
 }
 

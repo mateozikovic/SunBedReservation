@@ -1,0 +1,8 @@
+<!-- item_reservation_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#000000" />
+    <stroke
+        android:color="#FFFFFF"
+        android:width="1dp" />
+    <corners android:radius="8dp" />
+</shape>

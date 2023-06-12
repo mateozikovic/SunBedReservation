@@ -1,5 +1,7 @@
 package com.application.sunbedreservation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,12 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public class ReservationsFragment extends Fragment {
+public class ReservationsFragment extends Fragment implements ReservationsAdapter.OnDeleteReservationClickListener {
     private ReservationsViewModel reservationsViewModel;
     private ReservationsAdapter reservationsAdapter;
 
@@ -32,6 +36,7 @@ public class ReservationsFragment extends Fragment {
 
         // Initialize the reservations adapter
         reservationsAdapter = new ReservationsAdapter();
+        reservationsAdapter.setOnDeleteReservationClickListener(this);
         reservationsRecyclerView.setAdapter(reservationsAdapter);
 
         // Initialize the ViewModel
@@ -63,6 +68,26 @@ public class ReservationsFragment extends Fragment {
             return null;
         }
     }
+
+    @Override
+    public void onDeleteReservationClick(Reservation reservation) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Delete Reservation")
+                .setMessage("Are you sure you want to delete this reservation?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String reservationId = reservation.getReservationId();
+                        if (reservationId != null) {
+                            DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
+                            reservationsRef.child(reservationId).setValue(null);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
 
     private void updateReservationsList(List<Reservation> reservations) {
         // Update the UI with the new reservations list
