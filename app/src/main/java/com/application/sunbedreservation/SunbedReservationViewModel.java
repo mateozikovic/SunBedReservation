@@ -18,8 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +92,25 @@ public class SunbedReservationViewModel extends ViewModel {
                 // Add the beach ID to the reservation data
                 reservation.setBeachId(beachId);
                 reservation.setUserId(getCurrentUserId());
+
+                String currentMonth = getCurrentMonth();
+
+                beachRef.child("BeachPrices").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Double row1price = snapshot.child("row1" + currentMonth).getValue(Double.class);
+                        Double row2price = snapshot.child("row2" + currentMonth).getValue(Double.class);
+
+                        Log.i("current month", currentMonth);
+                        Log.i("row1price", String.valueOf(row1price));
+                        Log.i("row2price", String.valueOf(row2price));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Failed getting prices from the database", String.valueOf(error));
+                    }
+                });
 
                 // Save the reservation to the "reservations" node
                 reservationsRef.child(reservationId).setValue(reservation)
@@ -185,6 +208,11 @@ public class SunbedReservationViewModel extends ViewModel {
             }
         });
     }
+
+    public String getCurrentMonth() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.format(DateTimeFormatter.ofPattern("MMMM"));
+    };
 
     public static CompletableFuture<String> getTitleFromFirebase(String beachId) {
         CompletableFuture<String> future = new CompletableFuture<>();

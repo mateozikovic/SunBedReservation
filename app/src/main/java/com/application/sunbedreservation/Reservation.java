@@ -9,6 +9,7 @@ public class Reservation {
     private String reservationDate;
     private List<String> sunbedIds;
     private String reservationId;
+    private double totalCost;
 
     public Reservation() {
         // Default constructor required for Firebase
@@ -68,6 +69,15 @@ public class Reservation {
 
     public void setReservationId(String reservationId) {
         this.reservationId = reservationId;
+    }
+
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
 
 
