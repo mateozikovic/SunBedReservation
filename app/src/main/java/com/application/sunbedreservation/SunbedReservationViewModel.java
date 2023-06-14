@@ -1,5 +1,6 @@
 package com.application.sunbedreservation;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SunbedReservationViewModel extends ViewModel {
@@ -104,6 +106,57 @@ public class SunbedReservationViewModel extends ViewModel {
                         Log.i("current month", currentMonth);
                         Log.i("row1price", String.valueOf(row1price));
                         Log.i("row2price", String.valueOf(row2price));
+
+                        AtomicReference<Double> totalCost = new AtomicReference<>(0.0);
+                        List<String> sunbedIds = reservation.getSunbedIds();
+                        AtomicInteger sunbedCount = new AtomicInteger(sunbedIds.size());
+
+                        for (String sunbedId : sunbedIds) {
+                            DatabaseReference sunbedRef = beachRef.child("sunbeds").child(sunbedId);
+                            sunbedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Integer row = snapshot.child("row").getValue(Integer.class);
+                                    if (row != null) {
+                                        if (row.equals(1)) {
+                                            totalCost.updateAndGet(v -> v + row1price);
+                                        } else if (row.equals(2)) {
+                                            totalCost.updateAndGet(v -> v + row2price);
+                                        }
+                                    }
+
+                                    // Decrease the sunbed count
+                                    int updatedCount = sunbedCount.decrementAndGet();
+
+                                    // Check if all sunbeds have been processed
+                                    if (updatedCount == 0) {
+                                        reservation.setTotalCost(totalCost.get());
+                                        Log.i("Total Cost", String.valueOf(reservation.getTotalCost()));
+
+                                        // Save the reservation to the database
+                                        reservationsRef.child(reservationId).setValue(reservation)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        // Reservation saved successfully
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // Failed to save reservation
+                                                    }
+                                                });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    // Database read operation canceled
+                                }
+                            });
+                        }
+
                     }
 
                     @Override
