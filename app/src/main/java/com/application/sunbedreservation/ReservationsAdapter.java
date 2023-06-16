@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapter.ReservationViewHolder> {
@@ -47,6 +49,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
         private TextView beachTitleTextView;
         private TextView reservationDateTextView;
         private TextView sunbedsTextView;
+        private TextView totalPriceTextView;
         private Button deleteReservationButton;
 
         ReservationViewHolder(@NonNull View itemView) {
@@ -54,6 +57,7 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
             beachTitleTextView = itemView.findViewById(R.id.beachTitleTextView);
             reservationDateTextView = itemView.findViewById(R.id.reservationDateTextView);
             sunbedsTextView = itemView.findViewById(R.id.sunbedsTextView);
+            totalPriceTextView = itemView.findViewById(R.id.totalPriceTextView);
             deleteReservationButton = itemView.findViewById(R.id.deleteReservationButton);
         }
 
@@ -64,6 +68,10 @@ public class ReservationsAdapter extends RecyclerView.Adapter<ReservationsAdapte
             List<String> sunbedIds = reservation.getSunbedIds();
             String sunbedsText = TextUtils.join(", ", sunbedIds);
             sunbedsTextView.setText("Reserved sunbeds: " + sunbedsText);
+
+            String totalCost = String.valueOf(reservation.getTotalCost());
+
+            totalPriceTextView.setText("Total cost: " + totalCost + "€");
 
             deleteReservationButton.setOnClickListener(v -> {
                 if (onDeleteReservationClickListener != null) {
