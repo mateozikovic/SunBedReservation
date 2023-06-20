@@ -1,12 +1,16 @@
 package com.application.sunbedreservation;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -54,6 +58,7 @@ public class SunbedReservationFragment extends Fragment {
     private SunbedAdapter sunbedAdapter;
     private FrameLayout datePickerContainer;
     private String selectedDate;
+    private MutableLiveData<Double> totalPriceLiveData;
 
     int[] images = {R.drawable.one, R.drawable.two, R.drawable.three};
 
@@ -135,6 +140,8 @@ public class SunbedReservationFragment extends Fragment {
 
                         // Save the reservation using the ViewModel and pass the beach ID
                         mViewModel.saveReservation(beachId, reservation);
+                        LiveData<Double> totalPrice = mViewModel.getTotalPrice();
+                        showTotalPricePrompt(beachId, reservation, totalPrice);
                     } else {
                         Toast.makeText(getContext(), "Please select at least one sunbed", Toast.LENGTH_SHORT).show();
                     }
@@ -181,4 +188,58 @@ public class SunbedReservationFragment extends Fragment {
 
         materialDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER");
     }
+
+    private void showTotalPricePrompt(String beachId, Reservation reservation, LiveData<Double> totalPrice) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Confirm Reservation");
+
+        // Create a flag to track if the observer has already been triggered
+        final boolean[] observerTriggered = {false};
+
+        // Observe the totalPrice LiveData
+        totalPrice.observe(getViewLifecycleOwner(), new Observer<Double>() {
+            @Override
+            public void onChanged(Double totalPriceValue) {
+                if (!observerTriggered[0]) {
+                    observerTriggered[0] = true;
+
+                    if (totalPriceValue != null) {
+                        builder.setMessage(String.format(Locale.getDefault(), "The total price is %.2f. Do you want to proceed with the reservation?", totalPriceValue));
+                    } else {
+                        // Handle the case when the total price is null or not available
+                        builder.setMessage("Total price not available. Do you want to proceed with the reservation?");
+                    }
+
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Navigate to another fragment
+                            FragmentManager fragmentManager = getParentFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, new ReservationsFragment()) // Replace with the appropriate fragment class
+                                    .commit();
+
+                            dialog.dismiss(); // Close the dialog
+                        }
+                    });
+
+                    // TODO : fix the no button
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String reservationId = reservation.getReservationId();
+                            if (reservationId != null) {
+                                DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference("Reservations");
+                                reservationsRef.child(reservationId).setValue(null);
+                            }
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        });
+    }
+
 }

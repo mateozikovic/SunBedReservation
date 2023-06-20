@@ -36,14 +36,22 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SunbedReservationViewModel extends ViewModel {
     private MutableLiveData<Map<Integer, List<Sunbed>>> sunbedRows = new MutableLiveData<>();
     private MutableLiveData<String> currentUserId = new MutableLiveData<>();
+    private MutableLiveData<Double> totalPrice = new MutableLiveData<>();
 
     public LiveData<Map<Integer, List<Sunbed>>> getSunbedRows() {
         return sunbedRows;
     }
-
     public LiveData<String> getUserId() {
         return currentUserId;
     }
+    public LiveData<Double> getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void updateTotalPrice(double price) {
+        totalPrice.setValue(price);
+    }
+
     public void fetchSunbeds(String sunbedId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);
         ref.addValueEventListener(new ValueEventListener() {
@@ -124,13 +132,13 @@ public class SunbedReservationViewModel extends ViewModel {
                                             totalCost.updateAndGet(v -> v + row2price);
                                         }
                                     }
-
                                     // Decrease the sunbed count
                                     int updatedCount = sunbedCount.decrementAndGet();
 
                                     // Check if all sunbeds have been processed
                                     if (updatedCount == 0) {
                                         reservation.setTotalCost(totalCost.get());
+                                        updateTotalPrice(totalCost.get());
                                         Log.i("Total Cost", String.valueOf(reservation.getTotalCost()));
 
                                         // Save the reservation to the database
