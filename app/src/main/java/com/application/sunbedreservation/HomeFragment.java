@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.application.sunbedreservation.weather.WeatherViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -49,12 +48,37 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     SearchView searchView;
+    private WeatherViewModel weatherViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        // Obtain an instance of the ViewModel
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
+        // Fetch weather data for a specific latitude and longitude
+        double latitude = 37.7749; // Replace with the actual latitude
+        double longitude = -122.4194; // Replace with the actual longitude
+        weatherViewModel.fetchWeatherData(requireContext(), latitude, longitude);
+
+        // Observe the weatherData LiveData
+        weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherData -> {
+            if (weatherData != null) {
+                // Log the weather data
+                Log.d("WeatherData", "Temperature: " + weatherData.getTemperature() + "°C");
+                Log.d("WeatherData", "Humidity: " + weatherData.getHumidity() + "%");
+                Log.d("WeatherData", "Weather Description: " + weatherData.getWeatherDescription());
+
+                // Update the UI with the weather data as needed
+                // For example, you can display the data in TextViews, etc.
+            } else {
+                // Handle the case when weather data is null or not available
+            }
+        });
 
         // Initialize the view
         searchView = view.findViewById(R.id.idSearchView);
@@ -117,12 +141,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("Beaches");
 
-        WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
-        viewModel.fetchTemperature("London");
-
-        viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
-
-
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -148,15 +166,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     marker.setTag(customProperties);
                     markerMap.put(beachId, marker);
 
-                    // TODO get the temperature from the api and display it
-//                    WeatherViewModel viewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
-//                    viewModel.fetchTemperature("London");
-//
-//                    viewModel.getTemperature().observe(getViewLifecycleOwner(), temperature -> Log.i("tempValue", String.valueOf(temperature)));
-
-                    /*
-                          InfoWindow Click Listener
-                     */
                     mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
