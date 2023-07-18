@@ -70,9 +70,10 @@
 
         <Button
             android:id="@+id/select_date_button"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Select Date" />
+            android:text="Select Date"
+            android:layout_gravity="center_horizontal"/>
 
         <FrameLayout
             android:id="@+id/date_picker_container"
@@ -84,13 +85,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"
+            android:background="@drawable/beach_background"/>
 
         <Button
             android:id="@+id/reserve_button"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Reserve" />
+            android:text="Reserve"
+            android:layout_gravity="center_horizontal"
+            />
 
     </LinearLayout>
 </ScrollView>

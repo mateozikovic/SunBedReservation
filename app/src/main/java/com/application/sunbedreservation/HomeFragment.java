@@ -140,23 +140,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     weatherViewModel.fetchWeatherData(requireContext(), latitude, longitude);
 
                     // Observe the weatherData LiveData
-                    weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherData -> {
-                        if (weatherData != null) {
-
-                           String weatherDataInfoString = ("Temperature: " + weatherData.getTemperature() + "\n" +
-                                     "Humidity: " + weatherData.getHumidity() + "\n" +
-                                     "Weather Description: " + weatherData.getWeatherDescription());
-
-
-                            customProperties.put("customString", (String) weatherDataInfoString);
-
-                        } else {
-                            // Handle the case when weather data is null or not available
-                        }
-                    });
 
                     Marker marker = mMap.addMarker(markerOptions);
-                    marker.setTag(customProperties);
                     markerMap.put(beachId, marker);
 
                     mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
