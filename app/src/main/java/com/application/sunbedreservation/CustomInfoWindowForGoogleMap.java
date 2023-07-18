@@ -48,7 +48,7 @@ public class CustomInfoWindowForGoogleMap implements GoogleMap.InfoWindowAdapter
         subtitle.setText(marker.getSnippet());
 
         Map<String, Object> customProperties = (Map<String, Object>) marker.getTag();
-        freeSunbeds.setText("Free Sunbeds:" + (String) customProperties.get("customString"));
+        freeSunbeds.setText((String) customProperties.get("customString"));
         temperature.setText((String) customProperties.get("temperatureValue"));
 
         return v;

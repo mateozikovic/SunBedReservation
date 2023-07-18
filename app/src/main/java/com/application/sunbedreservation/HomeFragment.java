@@ -2,8 +2,6 @@ package com.application.sunbedreservation;
 
 import static android.content.ContentValues.TAG;
 
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -17,10 +15,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,10 +34,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
@@ -55,30 +50,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-
-        // Obtain an instance of the ViewModel
-        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
-
-        // Fetch weather data for a specific latitude and longitude
-        double latitude = 37.7749; // Replace with the actual latitude
-        double longitude = -122.4194; // Replace with the actual longitude
-        weatherViewModel.fetchWeatherData(requireContext(), latitude, longitude);
-
-        // Observe the weatherData LiveData
-        weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherData -> {
-            if (weatherData != null) {
-                // Log the weather data
-                Log.d("WeatherData", "Temperature: " + weatherData.getTemperature() + "°C");
-                Log.d("WeatherData", "Humidity: " + weatherData.getHumidity() + "%");
-                Log.d("WeatherData", "Weather Description: " + weatherData.getWeatherDescription());
-
-                // Update the UI with the weather data as needed
-                // For example, you can display the data in TextViews, etc.
-            } else {
-                // Handle the case when weather data is null or not available
-            }
-        });
 
         // Initialize the view
         searchView = view.findViewById(R.id.idSearchView);
@@ -141,6 +112,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("Beaches");
 
+        // Obtain an instance of the ViewModel
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
+
+
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -151,8 +127,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     Beach beach = beachSnapshot.getValue(Beach.class);
                     String beachId = beachSnapshot.getKey();
 
-
-
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(Double.parseDouble(beach.locationLat),Double.parseDouble(beach.locationLng)))
                             .title(beach.title)
@@ -161,7 +135,35 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     
                     Map<String,Object> customProperties = new HashMap<>();
 
-                    customProperties.put("customString", beach.freeSunbeds);
+
+                    // Fetch weather data for a specific latitude and longitude
+                    double latitude = Double.parseDouble(beach.locationLat); // Replace with the actual latitude
+                    double longitude = Double.parseDouble(beach.locationLng); // Replace with the actual longitude
+                    weatherViewModel.fetchWeatherData(requireContext(), latitude, longitude);
+
+                    // Observe the weatherData LiveData
+                    weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherData -> {
+                        if (weatherData != null) {
+
+                           String weatherDataInfoString = ("Temperature: " + weatherData.getTemperature() + "\n" +
+                                     "Humidity: " + weatherData.getHumidity() + "\n" +
+                                     "Weather Description: " + weatherData.getWeatherDescription());
+
+
+                            customProperties.put("customString", (String) weatherDataInfoString);
+
+                            // Log the weather data
+                            Log.d("WeatherData", "Temperature: " + weatherData.getTemperature() + "°C");
+                            Log.d("WeatherData", "Humidity: " + weatherData.getHumidity() + "%");
+                            Log.d("WeatherData", "Weather Description: " + weatherData.getWeatherDescription());
+
+                            // Update the UI with the weather data as needed
+                            // For example, you can display the data in TextViews, etc.
+                        } else {
+                            // Handle the case when weather data is null or not available
+                        }
+                    });
+
                     Marker marker = mMap.addMarker(markerOptions);
                     marker.setTag(customProperties);
                     markerMap.put(beachId, marker);
