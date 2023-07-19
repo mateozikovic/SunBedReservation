@@ -59,6 +59,9 @@ public class SunbedReservationFragment extends Fragment {
     private FrameLayout datePickerContainer;
     private String selectedDate;
     private MutableLiveData<Double> totalPriceLiveData;
+    private TextView titleTextView;
+    private TextView subTitleTextView;
+
 
     int[] images = {R.drawable.one, R.drawable.two, R.drawable.three};
 
@@ -90,7 +93,7 @@ public class SunbedReservationFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(SunbedReservationViewModel.class);
 
         // Getting arguments from HomeFragment
-        String sunbedId = getArguments().getString("beach_id");
+        String beachId = getArguments().getString("beach_id");
 
         // Observe user ID
         mViewModel.getUserId().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -100,8 +103,24 @@ public class SunbedReservationFragment extends Fragment {
             }
         });
 
+        titleTextView = view.findViewById(R.id.beach_name_title);
+        subTitleTextView = view.findViewById(R.id.beach_sub_title);
+
+        // Observe LiveData from the ViewModel
+        mViewModel.getTitleLiveData().observe(getViewLifecycleOwner(), title -> {
+            // Update the titleTextView with the new title value
+            titleTextView.setText(title);
+        });
+
+        mViewModel.getSubTitleLiveData().observe(getViewLifecycleOwner(), subTitle -> {
+            // Update the subTitleTextView with the new subTitle value
+            subTitleTextView.setText(subTitle);
+        });
+
+        mViewModel.fetchBeachData(beachId);
+        
         // Fetch the list of sunbeds
-        mViewModel.fetchSunbeds(sunbedId);
+        mViewModel.fetchSunbeds(beachId);
         mViewModel.getSunbedRows().observe(getViewLifecycleOwner(), new Observer<Map<Integer, List<Sunbed>>>() {
             @Override
             public void onChanged(Map<Integer, List<Sunbed>> sunbedMap) {

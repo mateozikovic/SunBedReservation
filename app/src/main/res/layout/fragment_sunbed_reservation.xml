@@ -18,8 +18,23 @@
 
         <TextView
             android:id="@+id/beach_name_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/beach_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="#666666"
+            android:layout_below="@id/beach_name_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp" />
 
         <Button
             android:id="@+id/select_date_button"

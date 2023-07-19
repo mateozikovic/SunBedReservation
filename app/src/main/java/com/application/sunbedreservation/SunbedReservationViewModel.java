@@ -37,6 +37,9 @@ public class SunbedReservationViewModel extends ViewModel {
     private MutableLiveData<Map<Integer, List<Sunbed>>> sunbedRows = new MutableLiveData<>();
     private MutableLiveData<String> currentUserId = new MutableLiveData<>();
     private MutableLiveData<Double> totalPrice = new MutableLiveData<>();
+    private MutableLiveData<String> titleLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> subTitleLiveData = new MutableLiveData<>();
+
 
     public LiveData<Map<Integer, List<Sunbed>>> getSunbedRows() {
         return sunbedRows;
@@ -47,10 +50,53 @@ public class SunbedReservationViewModel extends ViewModel {
     public LiveData<Double> getTotalPrice() {
         return totalPrice;
     }
+    public LiveData<String> getTitleLiveData() {
+        return titleLiveData;
+    }
+
+    public LiveData<String> getSubTitleLiveData() {
+        return subTitleLiveData;
+    }
+
 
     public void updateTotalPrice(double price) {
         totalPrice.setValue(price);
     }
+
+    public void fetchBeachData(String beachId) {
+        DatabaseReference beachRef = FirebaseDatabase.getInstance().getReference("Beaches").child(beachId);
+        beachRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String title = dataSnapshot.child("title").getValue(String.class);
+                    String subTitle = dataSnapshot.child("subTitle").getValue(String.class);
+
+                    // Do something with the fetched data
+                    // For example, you can set the strings in LiveData to observe them in the fragment
+                    // or you can perform any other operation you need.
+
+                    // Save the data in LiveData if needed
+                    titleLiveData.setValue(title);
+                    subTitleLiveData.setValue(subTitle);
+
+                    // Print the data to verify
+                    Log.d("BeachData", "Title: " + title);
+                    Log.d("BeachData", "SubTitle: " + subTitle);
+                } else {
+                    // Handle the case where the data doesn't exist
+                    Log.d("BeachData", "Data not found for beachId: " + beachId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the case where the data retrieval was canceled or failed
+                Log.e("Failed to get data", databaseError.getMessage());
+            }
+        });
+    }
+
 
     public void fetchSunbeds(String sunbedId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);
