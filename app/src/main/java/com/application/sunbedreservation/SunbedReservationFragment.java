@@ -35,8 +35,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -55,13 +58,16 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 
 public class SunbedReservationFragment extends Fragment {
     private SunbedReservationViewModel mViewModel;
+    private WeatherViewModel weatherViewModel;
     private SunbedAdapter sunbedAdapter;
     private FrameLayout datePickerContainer;
     private String selectedDate;
     private MutableLiveData<Double> totalPriceLiveData;
     private TextView titleTextView;
     private TextView subTitleTextView;
-
+    private TextView temperature;
+    private TextView humidity;
+    private TextView weatherDescription;
 
     int[] images = {R.drawable.one, R.drawable.two, R.drawable.three};
 
@@ -77,6 +83,7 @@ public class SunbedReservationFragment extends Fragment {
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
         sliderView.startAutoCycle();
+
 
         Button selectDateButton = view.findViewById(R.id.select_date_button);
         selectDateButton.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +101,57 @@ public class SunbedReservationFragment extends Fragment {
 
         // Getting arguments from HomeFragment
         String beachId = getArguments().getString("beach_id");
+
+        mViewModel.fetchBeachData(beachId);
+
+        DatabaseReference dbReferenceWeather;
+        dbReferenceWeather = FirebaseDatabase.getInstance().getReference("Beaches").child(beachId);
+
+        dbReferenceWeather.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Beach beach = snapshot.getValue(Beach.class);
+
+                Double lat = Double.parseDouble(beach.locationLat);
+                Double lng = Double.parseDouble(beach.locationLng);
+
+                weatherViewModel.fetchWeatherData(requireContext(), lat, lng);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        temperature = view.findViewById(R.id.beach_temperature);
+        humidity = view.findViewById(R.id.beach_humidity);
+        weatherDescription = view.findViewById(R.id.beach_weather_description);
+
+        weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
+        // Observe the weatherData LiveData
+        weatherViewModel.getWeatherData().observe(getViewLifecycleOwner(), weatherData -> {
+            if (weatherData != null) {
+
+                String weatherDataInfoString = ("Temperature: " + weatherData.getTemperature() + "\n" +
+                        "Humidity: " + weatherData.getHumidity() + "\n" +
+                        "Weather Description: " + weatherData.getWeatherDescription());
+
+                temperature.setText(String.valueOf(weatherData.getTemperature()));
+                humidity.setText(String.valueOf(weatherData.getHumidity()));
+                weatherDescription.setText(String.valueOf(weatherData.getWeatherDescription()));
+
+                // Log the weather data
+                Log.d("WeatherData1", "Temperature: " + weatherData.getTemperature() + "°C");
+                Log.d("WeatherData1", "Humidity: " + weatherData.getHumidity() + "%");
+                Log.d("WeatherData1", "Weather Description: " + weatherData.getWeatherDescription());
+
+            } else {
+
+            }
+        });
 
         // Observe user ID
         mViewModel.getUserId().observe(getViewLifecycleOwner(), new Observer<String>() {

@@ -72,15 +72,9 @@ public class SunbedReservationViewModel extends ViewModel {
                     String title = dataSnapshot.child("title").getValue(String.class);
                     String subTitle = dataSnapshot.child("subTitle").getValue(String.class);
 
-                    // Do something with the fetched data
-                    // For example, you can set the strings in LiveData to observe them in the fragment
-                    // or you can perform any other operation you need.
-
-                    // Save the data in LiveData if needed
                     titleLiveData.setValue(title);
                     subTitleLiveData.setValue(subTitle);
 
-                    // Print the data to verify
                     Log.d("BeachData", "Title: " + title);
                     Log.d("BeachData", "SubTitle: " + subTitle);
                 } else {
@@ -96,7 +90,6 @@ public class SunbedReservationViewModel extends ViewModel {
             }
         });
     }
-
 
     public void fetchSunbeds(String sunbedId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Beaches").child(sunbedId);

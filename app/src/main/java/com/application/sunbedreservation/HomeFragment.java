@@ -115,8 +115,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         // Obtain an instance of the ViewModel
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
-
-
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -152,13 +150,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                             customProperties.put("customString", (String) weatherDataInfoString);
 
-                            // Log the weather data
-                            Log.d("WeatherData", "Temperature: " + weatherData.getTemperature() + "°C");
-                            Log.d("WeatherData", "Humidity: " + weatherData.getHumidity() + "%");
-                            Log.d("WeatherData", "Weather Description: " + weatherData.getWeatherDescription());
-
-                            // Update the UI with the weather data as needed
-                            // For example, you can display the data in TextViews, etc.
                         } else {
                             // Handle the case when weather data is null or not available
                         }
