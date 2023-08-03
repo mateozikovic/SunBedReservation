@@ -16,9 +16,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    FirebaseDatabase database;
+    DatabaseReference newsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
+
+        // Initialize Firebase Realtime Database
+        database = FirebaseDatabase.getInstance();
+        newsRef = database.getReference("News");
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
 
@@ -60,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         /*
         * TODO create a sub-document in each beach for beach prices and fill it with dummy data
         * */
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference beachesRef = database.getReference("Beaches");
+        DatabaseReference newsRef = database.getReference("News");
+        addDummyDataToFirebase();
 
         beachesRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -108,8 +119,48 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("BeachPrice Error", String.valueOf(error));
             }
         });
+    }
 
+    // Step 1: Generate Dummy Data
+    private List<News> generateDummyData() {
+        List<News> dummyDataList = new ArrayList<>();
 
+        // Create and add dummy data objects
+        long currentTimeMillis = System.currentTimeMillis();
+        News news1 = new News("Skriveni dragulji Istre: Otkrivanje čari manje poznatih ljepota", "Dobrodošli u Istru, očaravajuću regiju koja oduzima dah svojom bogatom poviješću, nevjerojatnom kulturom i prekrasnom prirodom. Ovo živopisno poluotok nalazi se na sjeverozapadu Hrvatske, tik uz Jadransko more. Istra oduševljava posjetitelje svojom raznolikošću - od slikovitih srednjovjekovnih gradova poput Rovinja, Poreča i Motovuna do netaknutih prirodnih ljepota unutar Nacionalnog parka Brijuni i Parka prirode Učka.\"\n" +
+                "\n" +
+                "\"Jedan od glavnih aduta Istre je njezina gastronomska scena koja vas neće ostaviti ravnodušnima. Uživajte u autentičnim istarskim jelima poput fuži s tartufima, maneštre, pršuta i fantastičnih maslinovih ulja. Ovo područje je poznato po bogatstvu svježih plodova mora, što će zadovoljiti i najzahtjevnija nepca.\"\n" +
+                "\n" +
+                "\"Kroz povijest, Istra je bila žarište raznih kultura i civilizacija, što je ostavilo trag na njezinoj arhitekturi i umjetnosti. Očarajte se mnoštvom spomenika, crkava i muzeja koji svjedoče o bogatoj prošlosti ovog područja. Posjetite pulsirajuće gradove i mirna sela, svaki s pričom za ispričati.\"\n" +
+                "\n" +
+                "\"Kada je riječ o aktivnostima, Istra ima nešto za svakoga. Uživajte u raznolikim sportskim aktivnostima na moru poput ronjenja, jedrenja na dasci i jedrenja. Za ljubitelje prirode, ovdje su prekrasni biciklistički i planinarski putevi koji vas vode kroz netaknutu prirodu.\"\n" +
+                "\n" +
+                "\"Ne zaboravite posjetiti neke od najboljih plaža na Jadranskoj obali. Od skrivenih uvala do dužih šljunčanih plaža, Istra nudi mnoštvo mogućnosti za opuštanje i uživanje na suncu.\"\n" +
+                "\n" +
+                "\"Istra vas poziva da doživite njezinu neograničenu ljepotu i gostoljubivost. Bilo da ste avanturistički putnik, kulturni istraživač ili jednostavno tražite miran bijeg od svakodnevice, Istra će vas zasigurno osvojiti svojom raznolikošću i šarmom.\"", "Istra, Hrvatska", "https://www.bretonne-en-croatie.com/data/images/image/newbig/9505/apartman.jpeg", currentTimeMillis);
+        dummyDataList.add(news1);
+
+        News news2 = new News("Hrvatska - Biser Jadrana", "\\\"Dobrodošli u Hrvatsku, čarobni biser Jadrana! Smještena na raskrižju Srednje i Jugoistočne Europe, Hrvatska mami putnike svojom predivnom obalom, netaknutim plažama i kristalno čistim tirkiznim vodama. Od srednjovjekovne čarolije starog grada Dubrovnika do povijesnih čuda Dioklecijanove palače u Splitu, Hrvatska nudi zavodljivu mješavinu bogate povijesti i modernog sjaja.\\\"\\n\" +\n" +
+                "        \"\\n\" +\n" +
+                "        \"\\\"Istražite zadivljujući Nacionalni park Plitvička jezera, UNESCO-ova svjetska baština, gdje niz kaskadnih jezera i vodopada stvara čarobni svijet. Proputujte šarmantni istarski poluotok poznat po slikovitim brdskim gradovima i izvrsnim trufelnim jelima. Osvojite se prirodnim ljepotama dalmatinskih otoka, gdje vas čekaju idilične plaže i drevni ostaci.\\\"\\n\" +\n" +
+                "        \"\\n\" +\n" +
+                "        \"\\\"Hrvatska nije samo o obali; krenite unutrašnjosti prema čarobnom glavnom gradu Zagrebu, gdje oživljavaju povijest, kultura i umjetnost. Kušajte lokalnu kuhinju u tradicionalnim konobama, uživajući u jelima kao što su 'peka', 'ćevapi' i 'pasticada'. Hrvatska kulinarska čarolija sigurno će vas oduševiti.\\\"\\n\" +\n" +
+                "        \"\\n\" +\n" +
+                "        \"\\\"Bilo da ste avanturist u potrazi za uzbuđenjima u aktivnostima na otvorenom poput jedrenja, planinarenja ili kajakaštva, ili ljubitelj kulture koji istražuje drevno nasljeđe zemlje, Hrvatska nudi nešto za svakoga. Doživite toplu gostoljubivost hrvatskog naroda i uronite u živahnu atmosferu lokalnih festivala i događanja.\\\"\\n\" +\n" +
+                "        \"\\n\" +\n" +
+                "        \"\\\"Kako sunce zalazi nad Jadranskim morem, Hrvatska postaje čarobni raj ljepote i romantike. Otkrijte zašto je Hrvatska postala vrhunskom destinacijom za putnike koji traže jedinstvenu kombinaciju prirodnih čuda, kulturne raznolikosti i nezaboravnih iskustava.\\\"", "Croatia", "https://media.cnn.com/api/v1/images/stellar/prod/230526055836-dupe-03-croatia-dalmatia-trogir-zadar-kornati-national-park.jpg?c=original&q=w_1280,c_fill", currentTimeMillis);
+        dummyDataList.add(news2);
+
+        return dummyDataList;
+    }
+
+    // Step 2: Save Dummy Data to Firebase Realtime Database
+    private void addDummyDataToFirebase() {
+        List<News> dummyDataList = generateDummyData();
+
+        for (int i = 0; i < dummyDataList.size(); i++) {
+            newsRef.child("news" + (i + 1)).setValue(dummyDataList.get(i));
+        }
     }
 
 
