@@ -9,7 +9,6 @@ public class News {
     private String imageURL;
     private long date;
 
-    // Required empty constructor for Firestore serialization
     public News() {}
 
     public News(String title, String description, String location, String imageURL, long date) {
