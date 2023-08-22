@@ -31,13 +31,14 @@ public class WeatherViewModel extends ViewModel {
                     try {
                         JSONObject mainObject = response.getJSONObject("main");
                         double temperature = mainObject.getDouble("temp");
+                        int celsiusTemperature = (int) (temperature - 273.15);
                         int humidity = mainObject.getInt("humidity");
 
                         JSONArray weatherArray = response.getJSONArray("weather");
                         JSONObject weatherObject = weatherArray.getJSONObject(0);
                         String weatherDescription = weatherObject.getString("description");
 
-                        WeatherData data = new WeatherData(temperature, humidity, weatherDescription);
+                        WeatherData data = new WeatherData(celsiusTemperature, humidity, weatherDescription);
                         weatherData.setValue(data);
                     } catch (JSONException e) {
                         e.printStackTrace();

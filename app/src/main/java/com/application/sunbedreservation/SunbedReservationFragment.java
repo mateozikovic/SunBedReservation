@@ -139,9 +139,9 @@ public class SunbedReservationFragment extends Fragment {
                         "Humidity: " + weatherData.getHumidity() + "\n" +
                         "Weather Description: " + weatherData.getWeatherDescription());
 
-                temperature.setText(String.valueOf(weatherData.getTemperature()));
-                humidity.setText(String.valueOf(weatherData.getHumidity()));
-                weatherDescription.setText(String.valueOf(weatherData.getWeatherDescription()));
+                temperature.setText("Temperature: " + String.valueOf(weatherData.getTemperature()) + "°C");
+                humidity.setText("Humidity: " + String.valueOf(weatherData.getHumidity()) + "%");
+                weatherDescription.setText("Sky: " + String.valueOf(weatherData.getWeatherDescription()));
 
                 // Log the weather data
                 Log.d("WeatherData1", "Temperature: " + weatherData.getTemperature() + "°C");

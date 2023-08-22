@@ -40,9 +40,7 @@ public class CustomInfoWindowForGoogleMap implements GoogleMap.InfoWindowAdapter
 
         TextView title = (TextView) v.findViewById(R.id.info_title);
         TextView subtitle = (TextView) v.findViewById(R.id.info_subtitle);
-        TextView freeSunbeds = (TextView) v.findViewById(R.id.info_free_sunbeds);
-        TextView temperature = (TextView) v.findViewById(R.id.info_temperature);
-        ImageView image = (ImageView) v.findViewById(R.id.info_window_image);
+        subtitle.setMaxLines(2);
 
         title.setText(marker.getTitle());
         subtitle.setText(marker.getSnippet());

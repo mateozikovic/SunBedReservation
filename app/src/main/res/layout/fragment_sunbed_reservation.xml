@@ -14,6 +14,7 @@
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:background="@drawable/rounded_slider_background"
             tools:sliderIndicatorVisibility="visible" />
 
         <TextView
@@ -28,7 +29,7 @@
 
         <TextView
             android:id="@+id/beach_sub_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#666666"
@@ -37,12 +38,14 @@
             android:layout_marginTop="8dp" />
 
 
+
         <TextView
             android:id="@+id/beach_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#666666"
+            android:textStyle="bold"
             android:layout_below="@id/beach_name_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp" />
@@ -53,6 +56,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#666666"
+            android:textStyle="bold"
             android:layout_below="@id/beach_name_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp" />
@@ -63,6 +67,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#666666"
+            android:textStyle="bold"
             android:layout_below="@id/beach_name_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp" />
