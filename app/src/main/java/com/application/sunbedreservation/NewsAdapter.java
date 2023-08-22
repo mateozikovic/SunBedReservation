@@ -2,6 +2,7 @@ package com.application.sunbedreservation;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -65,8 +69,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
             // Set a click listener for the news item
             itemView.setOnClickListener(v -> {
-                // Handle click event here, you can navigate to the detail fragment
-                // or perform any other action based on the clicked news item.
+                // Handle click event here
+                // Open the NewsDetailFragment and pass the news data to it
+
+                // Create a new NewsDetailFragment
+                NewsDetailFragment detailFragment = new NewsDetailFragment();
+
+                // Pass data to the fragment using arguments
+                Bundle args = new Bundle();
+                args.putString("image_url", news.getImageURL());
+                args.putString("title", news.getTitle());
+                args.putString("description", news.getDescription());
+                detailFragment.setArguments(args);
+
+                // Open the fragment
+                FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, detailFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             });
         }
     }

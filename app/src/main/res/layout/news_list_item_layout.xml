@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/news_item_background"
     android:layout_margin="8dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/photoImageView"
@@ -28,10 +29,9 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:text="News Title"
             android:textColor="@android:color/white"
-            android:clickable="true"
-            android:focusable="true" />
+            android:clickable="false"
+            android:focusable="false" />
 
-        <!-- You can add other TextViews for additional details if needed -->
 
     </FrameLayout>
 
