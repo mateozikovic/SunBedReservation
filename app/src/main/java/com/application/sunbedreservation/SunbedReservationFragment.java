@@ -75,6 +75,7 @@ public class SunbedReservationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sunbed_reservation, container, false);
         Button reserveButton = view.findViewById(R.id.reserve_button);
+        selectedDate = "";
 
         // Image gallery for the beach
         SliderView sliderView = view.findViewById(R.id.image_slider);
@@ -191,7 +192,7 @@ public class SunbedReservationFragment extends Fragment {
                 // Set up the RecyclerView
                 RecyclerView recyclerView = view.findViewById(R.id.sunbed_recyclerview);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4, GridLayoutManager.HORIZONTAL, false));
-                sunbedAdapter = new SunbedAdapter(getContext(), sunbedList);
+                sunbedAdapter = new SunbedAdapter(getContext(), sunbedList, selectedDate);
                 recyclerView.setAdapter(sunbedAdapter);
             }
         });
@@ -232,6 +233,8 @@ public class SunbedReservationFragment extends Fragment {
     }
 
     private void showDatePicker() {
+        Log.d("DatePicker", "showDatePicker called");
+
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
         Calendar today = Calendar.getInstance();
         today.clear(Calendar.HOUR_OF_DAY);
@@ -247,6 +250,7 @@ public class SunbedReservationFragment extends Fragment {
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selectedDate) {
+                Log.d("DatePicker", "onPositiveButtonClick called");
                 // Handle the selected date
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(selectedDate);
@@ -256,6 +260,8 @@ public class SunbedReservationFragment extends Fragment {
 
                 // Save the selected date
                 SunbedReservationFragment.this.selectedDate = formattedDate;
+
+                sunbedAdapter.setSelectedDate(formattedDate);
 
                 // Update the UI to display the selected date
                 Button selectDateButton = getView().findViewById(R.id.select_date_button);
